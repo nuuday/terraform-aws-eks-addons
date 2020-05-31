@@ -25,30 +25,13 @@ locals {
   }
 }
 
-resource "aws_iam_role" "cluster_autoscaler" {
-  count = var.enable ? 1 : 0
+module "iam" {
+  source = "github.com/terraform-aws-modules/terraform-aws-iam//modules/iam-assumable-role-with-oidc?ref=v2.10.0"
 
-  name_prefix = "${var.cluster_name}-autoscaler"
-
-  assume_role_policy = <<EOF
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Effect": "Allow",
-      "Principal": {
-        "Federated": "${var.oidc_provider_arn}"
-      },
-      "Action": "sts:AssumeRoleWithWebIdentity",
-      "Condition": {
-        "StringEquals": {
-          "${var.oidc_provider_issuer}:sub": "system:serviceaccount:${kubernetes_namespace.cluster_autoscaler.0.metadata.0.name}:aws-cluster-autoscaler"
-        }
-      }
-    }
-  ]
-}
-EOF
+  create_role                   = var.enable
+  role_name                     = "${var.cluster_name}-cluster-autoscaler-irsa"
+  provider_url                  = var.oidc_provider_issuer
+  oidc_fully_qualified_subjects = ["system:serviceaccount:${kubernetes_namespace.cluster_autoscaler.0.metadata.0.name}:aws-cluster-autoscaler"]
 
   tags = var.tags
 }
@@ -96,7 +79,7 @@ resource "aws_iam_role_policy" "cluster_autoscaler" {
   count = var.enable ? 1 : 0
 
   name = "ClusterAutoscaler"
-  role = aws_iam_role.cluster_autoscaler.0.id
+  role = module.iam.this_iam_role_name
 
   policy = data.aws_iam_policy_document.cluster_autoscaler.json
 }
@@ -140,7 +123,7 @@ resource "helm_release" "cluster_autoscaler" {
 
   set {
     name  = "rbac.serviceAccountAnnotations.eks\\.amazonaws\\.com/role-arn"
-    value = aws_iam_role.cluster_autoscaler.0.arn
+    value = module.iam.this_iam_role_arn
     type  = "string"
   }
 

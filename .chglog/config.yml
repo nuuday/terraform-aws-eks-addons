@@ -1,0 +1,45 @@
+style: github
+template: CHANGELOG.tpl.md
+info:
+  title: CHANGELOG
+  repository_url: https://github.com/nuuday/terraform-aws-eks-addons
+options:
+  commits:
+    sort_by: Type
+    filters:
+      Type:
+        - feat
+        - fix
+        - improvement
+        - docs
+        - refactor
+        - test
+
+  commit_groups:
+    group_by: Type
+    sort_by: Type
+    title_maps:
+      feat: FEATURES
+      fix: BUG FIXES
+      improvement: ENHANCEMENTS
+      docs: DOCS
+      refactor: REFACTORS
+      test: TESTS
+
+  header:
+    pattern: "^(.+)\\s*:\\s*(.+)$"
+    pattern_maps:
+      - Type
+      - Subject
+
+  notes:
+    keywords:
+      - BREAKING CHANGES
+      - NOTES
+
+  refs:
+    actions:
+      - Closes
+      - Fixes
+      - Resolves
+

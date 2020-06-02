@@ -10,3 +10,6 @@ changelog:
 
 release:
 	$(SEMTAG) final -s $(scope)
+
+show-next-version:
+	@$(SEMTAG) final -s $(scope) -o -f

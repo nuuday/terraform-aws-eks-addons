@@ -7,6 +7,7 @@ locals {
 }
 
 resource "helm_release" "prometheus" {
+  count      = var.enable ? 1 : 0
   name       = local.release_name
   chart      = local.chart_name
   version    = local.chart_version

@@ -9,6 +9,7 @@ locals {
 
 
 resource "helm_release" "cilium" {
+  count            = var.enable ? 1 : 0
   name             = local.release_name
   chart            = local.chart_name
   version          = local.chart_version
@@ -21,7 +22,7 @@ resource "helm_release" "cilium" {
 
   set {
     name  = "global.cluster.id"
-    value = var.cilium_cluster_id
+    value = var.cluster_id
     type  = "string"
   }
 

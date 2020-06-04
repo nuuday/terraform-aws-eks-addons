@@ -13,7 +13,7 @@ module "iam" {
 
   create_role                   = var.enable
   role_name                     = "${var.cluster_name}-cluster-autoscaler-irsa"
-  provider_url                  = var.oidc_provider_url
+  provider_url                  = var.oidc_provider_issuer_url
   oidc_fully_qualified_subjects = ["system:serviceaccount:${kubernetes_namespace.cluster_autoscaler.0.metadata.0.name}:aws-cluster-autoscaler"]
 
   tags = var.tags

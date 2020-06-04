@@ -50,7 +50,7 @@ locals {
   }
 
   tags = {
-    team       = "odin-platform"
+    team = "odin-platform"
   }
 }
 
@@ -193,7 +193,7 @@ module "eks" {
 module "addons" {
   source = "../../modules/cluster-autoscaler"
 
-  cluster_name = module.eks.cluster_id
+  cluster_name         = module.eks.cluster_id
   oidc_provider_issuer = local.oidc_issuer
-  oidc_provider_arn = module.eks.oidc_provider_arn
+  oidc_provider_arn    = module.eks.oidc_provider_arn
 }

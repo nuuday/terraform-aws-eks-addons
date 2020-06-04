@@ -1,0 +1,13 @@
+global:
+  masquerade: false
+  tunnel: disabled
+  identityAllocationMode: kvstore
+  nodeinit:
+    enabled: true
+  prometheus:
+    enabled: true
+  cni:
+    chainingMode: aws-cni
+  etcd:
+    enabled: true
+    managed: true

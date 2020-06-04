@@ -1,1 +1,5 @@
 *   @nuuday/shared-platforms @qvistgaard
+
+modules/cilium @qvistgaard
+modules/loki @qvistgaard
+modules/prometheus @qvistgaard

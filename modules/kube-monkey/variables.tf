@@ -1,4 +1,4 @@
-variable "enabled" {
+variable "enable" {
   default     = true
   description = "Enable or Disable kube-monkey."
   type        = bool

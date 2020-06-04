@@ -6,7 +6,7 @@ locals {
 }
 
 resource "helm_release" "kube-monkey" {
-  count     = var.enabled ? 1 : 0
+  count     = var.enable ? 1 : 0
   name      = local.release_name
   chart     = local.chart_name
   namespace = local.namespace

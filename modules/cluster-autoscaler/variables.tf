@@ -19,7 +19,7 @@ variable "asg_tags" {
   default     = {}
 }
 
-variable "oidc_provider_url" {
+variable "oidc_provider_issuer_url" {
   description = "Issuer used in the OIDC provider associated with the EKS cluster to support IRSA."
   type        = string
 }

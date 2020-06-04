@@ -1,3 +1,9 @@
+variable "enable" {
+  default     = true
+  description = "Enable or Disable cilium."
+  type        = bool
+}
+
 variable "chart_version" {
   default     = "1.7.4"
   description = "Cilium version to install"
@@ -10,13 +16,13 @@ variable "namespace" {
   type        = string
 }
 
-variable "cilium_cluster_id" {
+variable "cluster_id" {
   default     = "1"
   description = "Cilium cluster id"
   type        = number
 }
 
-variable "cilium_cluster_name" {
+variable "cluster_name" {
   description = "Cilium cluster name"
   type        = string
 }

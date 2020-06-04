@@ -7,7 +7,7 @@ locals {
 
 
 resource "helm_release" "node_termination_handler" {
-  count            = var.enabled ? 1 : 0
+  count            = var.enable ? 1 : 0
   name             = local.release_name
   chart            = local.chart_name
   version          = var.chart_version

@@ -4,7 +4,7 @@ variable "chart_version" {
   type        = string
 }
 
-variable "enabled" {
+variable "enable" {
   default     = true
   description = "Enable or Disable AWS Node Termination handler."
   type        = bool

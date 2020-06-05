@@ -1,22 +1,5 @@
 data "aws_region" "current" {}
 
-data "aws_eks_cluster" "cluster" {
-  name = var.cluster_name
-}
-
-data "aws_eks_cluster_auth" "cluster" {
-  name = var.cluster_name
-}
-
-provider "kubernetes" {
-  version = "~>1.11"
-
-  host                   = data.aws_eks_cluster.cluster.endpoint
-  cluster_ca_certificate = base64decode(data.aws_eks_cluster.cluster.certificate_authority.0.data)
-  token                  = data.aws_eks_cluster_auth.cluster.token
-  load_config_file       = false
-}
-
 locals {
   # Use supplied tags if provided, otherwise use defaults.
   asg_tags = length(var.asg_tags) > 0 ? var.tags : {

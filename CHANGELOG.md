@@ -10,6 +10,22 @@ project adheres to [Semantic Versioning](http://semver.org/).
 
 
 
+<a name="v0.2.0"></a>
+## [v0.2.0] - 2020-06-04
+**BUG FIXES**
+- change all 'enabled' variables to 'enable'
+- rename variable oidc_provider_issuer to oidc_provider_url
+- remove kubernetes provider config from cluster-autoscaler
+
+**FEATURES**
+- add cilium, kube-monkey, loki and prometheus
+- add metrics-server
+- add aws-node-termination-handler module
+
+**DOCS**
+- Add README with usage and release instructions
+
+
 <a name="v0.1.0"></a>
 ## v0.1.0 - 2020-06-01
 **REFACTORS**
@@ -19,4 +35,5 @@ project adheres to [Semantic Versioning](http://semver.org/).
 - add cluster-autoscaler
 
 
-[Unreleased]: https://github.com/nuuday/terraform-aws-eks-addons/compare/v0.1.0...HEAD
+[Unreleased]: https://github.com/nuuday/terraform-aws-eks-addons/compare/v0.2.0...HEAD
+[v0.2.0]: https://github.com/nuuday/terraform-aws-eks-addons/compare/v0.1.0...v0.2.0

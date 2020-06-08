@@ -28,7 +28,7 @@ provider "kubernetes" {
 
 
 resource "kubernetes_namespace" "nginx_ingress" {
-  count = var.ingress_controller_enable == true ? 1 : 0
+  count = var.enable == true ? 1 : 0
 
   metadata {
     name = var.kubernetes_namespace
@@ -37,7 +37,6 @@ resource "kubernetes_namespace" "nginx_ingress" {
 }
 
 resource "null_resource" "update_helm_repo" {
-
   provisioner "local-exec" {
     command = "helm repo update"
   }
@@ -47,21 +46,17 @@ resource "null_resource" "update_helm_repo" {
 # Add Kubernetes Stable Helm charts repo
 # https://github.com/helm/charts/tree/master/stable/nginx-ingress
 
-data "helm_repository" "stable" {
-  name = "stable"
-  url  = "https://kubernetes-charts.storage.googleapis.com"
-}
-
 resource "helm_release" "nginx_ingress" {
-  count = var.ingress_controller_enable == true ? 1 : 0
+  count = var.enable == true ? 1 : 0
 
   name    = "nginx-ingress-internal"
   chart   = "nginx-ingress"
   version = var.nginx_ingress_chart_version
-  #repository = data.helm_repository.stable.metadata.0.name
-  repository = "https://kubernetes-charts.storage.googleapis.com"
-  namespace  = kubernetes_namespace.nginx_ingress[0].metadata.0.name
-  wait       = "true"
+
+  repository       = "https://kubernetes-charts.storage.googleapis.com"
+  namespace        = var.kubernetes_namespace
+  create_namespace = true
+  wait             = true
 
   set {
     name  = "controller.service.type"
@@ -87,7 +82,7 @@ resource "helm_release" "nginx_ingress" {
 
   set {
     name  = "controller.extraArgs.publish-status-address"
-    value = var.lb_dns_name
+    value = var.lb_fqdn
   }
 
   # Ensure pods are scheduled on Linux nodes only
@@ -98,11 +93,10 @@ resource "helm_release" "nginx_ingress" {
 
   set {
     name  = "defaultBackend.nodeSelector.kubernetes\\.io/os"
-    value = var.defaultBackend_nodeSelector
+    value = "linux"
   }
 
   depends_on = [
-    kubernetes_namespace.nginx_ingress,
     null_resource.update_helm_repo
   ]
 }

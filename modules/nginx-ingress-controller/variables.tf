@@ -4,8 +4,8 @@ variable "eks_cluster_name" {
   type        = string
 }
 
-variable "lb_dns_name" {
-  description = "Customized address to set as the load-balancer status of Ingress"
+variable "lb_fqdn" {
+  description = "the FQDN address to set as the load-balancer status of Ingress"
 }
 
 variable "kubernetes_namespace" {
@@ -23,19 +23,13 @@ variable "controller_service_nodeports_https" {
   default     = "32443"
 }
 
-variable "defaultBackend_nodeSelector" {
-  description = "Node labels for pod assignment"
-  default     = "linux"
-}
-
 variable "nginx_ingress_chart_version" {
   description = "the nginx helm chart version"
   default     = "1.36.2"
 
 }
 
-
-variable "ingress_controller_enable" {
+variable "enable" {
   type    = bool
   default = true
 }

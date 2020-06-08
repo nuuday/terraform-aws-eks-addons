@@ -1,13 +1,13 @@
 data "aws_region" "current" {}
 
 locals {
-  chart_name    = "cluster-autoscaler"
-  chart_version = var.chart_version
-  release_name  = "aws-cluster-autoscaler"
-  namespace     = var.namespace
-  repository    = "https://kubernetes-charts.storage.googleapis.com"
-
-  provider_url = replace(var.oidc_provider_issuer_url, "https://", "")
+  chart_name      = "cluster-autoscaler"
+  chart_version   = var.chart_version
+  release_name    = "aws-cluster-autoscaler"
+  namespace       = var.namespace
+  repository      = "https://kubernetes-charts.storage.googleapis.com"
+  service_account = "aws-cluster-autoscaler"
+  provider_url    = replace(var.oidc_provider_issuer_url, "https://", "")
 
   # Use supplied tags if provided, otherwise use defaults.
   asg_tags = length(var.asg_tags) > 0 ? var.tags : {
@@ -17,13 +17,12 @@ locals {
 }
 
 module "iam" {
-  source = "terraform-aws-modules/iam/aws//modules/iam-assumable-role-with-oidc"
-  # source = "github.com/terraform-aws-modules/terraform-aws-iam//modules/iam-assumable-role-with-oidc?ref=v2.10.0"
+  source = "github.com/terraform-aws-modules/terraform-aws-iam//modules/iam-assumable-role-with-oidc?ref=v2.10.0"
 
   create_role                   = var.enable
   role_name                     = "${var.cluster_name}-cluster-autoscaler-irsa"
   provider_url                  = local.provider_url
-  oidc_fully_qualified_subjects = ["system:serviceaccount:${local.namespace}:aws-cluster-autoscaler"]
+  oidc_fully_qualified_subjects = ["system:serviceaccount:${local.namespace}:${local.service_account}"]
 
   tags = var.tags
 }
@@ -79,11 +78,12 @@ resource "aws_iam_role_policy" "cluster_autoscaler" {
 resource "helm_release" "cluster_autoscaler" {
   count = var.enable ? 1 : 0
 
-  name       = local.release_name
-  chart      = local.chart_name
-  version    = local.chart_version
-  repository = local.repository
-  namespace  = local.namespace
+  name             = local.release_name
+  chart            = local.chart_name
+  version          = local.chart_version
+  repository       = local.repository
+  namespace        = local.namespace
+  create_namespace = true
 
   set {
     name  = "cloudProvider"
@@ -103,6 +103,10 @@ resource "helm_release" "cluster_autoscaler" {
   set {
     name  = "rbac.serviceAccount.create"
     value = true
+  }
+  set {
+    name  = "rbac.serviceAccount.name"
+    value = local.service_account
   }
 
   set {

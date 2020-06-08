@@ -40,7 +40,7 @@ resource "null_resource" "update_helm_repo" {
 
   provisioner "local-exec" {
     command = "helm repo update"
-  } 
+  }
 }
 
 
@@ -55,13 +55,13 @@ data "helm_repository" "stable" {
 resource "helm_release" "nginx_ingress" {
   count = var.ingress_controller_enable == true ? 1 : 0
 
-  name       = "nginx-ingress-internal"
-  chart      = "nginx-ingress"
-  version    = var.nginx_ingress_chart_version
+  name    = "nginx-ingress-internal"
+  chart   = "nginx-ingress"
+  version = var.nginx_ingress_chart_version
   #repository = data.helm_repository.stable.metadata.0.name
   repository = "https://kubernetes-charts.storage.googleapis.com"
   namespace  = kubernetes_namespace.nginx_ingress[0].metadata.0.name
-  wait      = "true"
+  wait       = "true"
 
   set {
     name  = "controller.service.type"
@@ -103,7 +103,7 @@ resource "helm_release" "nginx_ingress" {
 
   depends_on = [
     kubernetes_namespace.nginx_ingress,
-    null_resource.update_helm_repo 
+    null_resource.update_helm_repo
   ]
 }
 

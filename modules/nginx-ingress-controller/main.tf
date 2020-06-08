@@ -82,7 +82,7 @@ resource "helm_release" "nginx_ingress" {
 
   set {
     name  = "controller.extraArgs.publish-status-address"
-    value = var.lb_dns_fqdn
+    value = var.lb_fqdn
   }
 
   # Ensure pods are scheduled on Linux nodes only

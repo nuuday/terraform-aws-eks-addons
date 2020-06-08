@@ -31,26 +31,26 @@ locals {
             dynamodb = {
               dynamodb_url = "dynamodb://${data.aws_region.loki.name}"
               metrics = {
-                url: "http://prometheus-server.kube-system.svc.cluster.local:9090"
+                url : "http://prometheus-server.kube-system.svc.cluster.local:9090"
               }
             }
           }
         }
         table_manager = {
           retention_deletes_enabled = true
-          retention_period = "720h"
+          retention_period          = "720h"
           index_tables_provisioning = {
             provisioned_write_throughput = 30
-            provisioned_read_throughput = 3
+            provisioned_read_throughput  = 3
             write_scale = {
-              enabled = true
+              enabled      = true
               min_capacity = 1
-              role_arn = module.iam.this_iam_role_arn
+              role_arn     = module.iam.this_iam_role_arn
             }
             read_scale = {
-              enabled = true
+              enabled      = true
               min_capacity = 1
-              role_arn = module.iam.this_iam_role_arn
+              role_arn     = module.iam.this_iam_role_arn
             }
           }
         }
@@ -180,7 +180,7 @@ resource "helm_release" "loki" {
   }
 
   set {
-    name = "loki.serviceAccount.annotations.eks\\.amazonaws\\.com/role-arn"
+    name  = "loki.serviceAccount.annotations.eks\\.amazonaws\\.com/role-arn"
     value = module.iam.this_iam_role_arn
   }
 }

@@ -1,10 +1,161 @@
 locals {
-  chart_name    = "loki-stack"
-  chart_version = var.chart_version
-  release_name  = "loki"
-  namespace     = var.namespace
-  repository    = "https://grafana.github.io/loki/charts"
+  chart_name     = "loki-stack"
+  chart_version  = var.chart_version
+  release_name   = "loki"
+  namespace      = var.namespace
+  repository     = "https://grafana.github.io/loki/charts"
+  provider_url   = replace(var.oidc_provider_issuer_url, "https://", "")
+  bucket_name    = "${var.cluster_name}-loki-${data.aws_caller_identity.loki.account_id}"
+  dynamodb_table = "${var.cluster_name}-loki"
+
+  loki_storage_s3 = {
+    loki = {
+      config = {
+        schema_config = {
+          configs : [
+            {
+              from         = "2020-05-15"
+              store        = "aws"
+              object_store = "s3"
+              schema       = "v11"
+              index = {
+                prefix = local.dynamodb_table
+              }
+            }
+          ]
+        }
+        # Read more here: https://github.com/grafana/loki/tree/master/docs/configuration#storage_config
+        storage_config = {
+          aws = {
+            s3 = "s3://${data.aws_region.loki.name}/${local.bucket_name}"
+            dynamodb = {
+              dynamodb_url = "dynamodb://${data.aws_region.loki.name}"
+              metrics = {
+                url: "http://prometheus-server.kube-system.svc.cluster.local:9090"
+              }
+            }
+          }
+        }
+        table_manager = {
+          retention_deletes_enabled = true
+          retention_period = "720h"
+          index_tables_provisioning = {
+            provisioned_write_throughput = 30
+            provisioned_read_throughput = 3
+            write_scale = {
+              enabled = true
+              min_capacity = 1
+              role_arn = module.iam.this_iam_role_arn
+            }
+            read_scale = {
+              enabled = true
+              min_capacity = 1
+              role_arn = module.iam.this_iam_role_arn
+            }
+          }
+        }
+      }
+    }
+  }
 }
+
+data aws_caller_identity "loki" {}
+data aws_region "loki" {}
+
+module "iam" {
+  source = "terraform-aws-modules/iam/aws//modules/iam-assumable-role-with-oidc"
+
+  create_role                   = var.enable
+  role_name                     = "${var.cluster_name}-loki-irsa"
+  provider_url                  = local.provider_url
+  oidc_fully_qualified_subjects = ["system:serviceaccount:${local.namespace}:loki"]
+
+  tags = var.tags
+}
+
+data "aws_iam_policy_document" "loki" {
+  statement {
+    actions = [
+      "s3:ListBucket",
+      "s3:PutObject",
+      "s3:GetObject"
+    ]
+    resources = ["arn:aws:s3:::${local.bucket_name}", "arn:aws:s3:::${local.bucket_name}/*"]
+  }
+
+  statement {
+    actions   = ["dynamodb:ListTables"]
+    resources = ["*"]
+  }
+
+  statement {
+    actions = [
+      "dynamodb:BatchGetItem",
+      "dynamodb:BatchWriteItem",
+      "dynamodb:DeleteItem",
+      "dynamodb:DescribeTable",
+      "dynamodb:GetItem",
+      "dynamodb:ListTagsOfResource",
+      "dynamodb:PutItem",
+      "dynamodb:Query",
+      "dynamodb:TagResource",
+      "dynamodb:UntagResource",
+      "dynamodb:UpdateItem",
+      "dynamodb:UpdateTable",
+      "dynamodb:CreateTable",
+      "dynamodb:DeleteTable"
+    ]
+
+    resources = ["arn:aws:dynamodb:${data.aws_region.loki.name}:${data.aws_caller_identity.loki.account_id}:table/${local.dynamodb_table}*"]
+  }
+
+  statement {
+    actions = [
+      "application-autoscaling:DescribeScalableTargets",
+      "application-autoscaling:DescribeScalingPolicies",
+      "application-autoscaling:RegisterScalableTarget",
+      "application-autoscaling:DeregisterScalableTarget",
+      "application-autoscaling:PutScalingPolicy",
+      "application-autoscaling:DeleteScalingPolicy"
+    ]
+    resources = ["*"]
+  }
+
+  statement {
+    actions = [
+      "iam:GetRole",
+      "iam:PassRole"
+    ]
+    resources = [
+      module.iam.this_iam_role_arn
+    ]
+  }
+
+
+}
+
+resource "aws_iam_role_policy" "loki" {
+  count = var.enable ? 1 : 0
+
+  name = "LokiStorage"
+  role = module.iam.this_iam_role_name
+
+  policy = data.aws_iam_policy_document.loki.json
+}
+
+module "s3_bucket" {
+  source = "terraform-aws-modules/s3-bucket/aws"
+
+  bucket = local.bucket_name
+  acl    = "private"
+
+  versioning = {
+    enabled = false
+  }
+  tags = var.tags
+
+}
+
 
 resource "helm_release" "loki" {
   count      = var.enable ? 1 : 0
@@ -15,7 +166,7 @@ resource "helm_release" "loki" {
   namespace  = local.namespace
 
   wait   = false
-  values = [file("${path.module}/files/helm/loki.yaml")]
+  values = [file("${path.module}/files/helm/loki.yaml"), yamlencode(local.loki_storage_s3)]
 
   set {
     name  = "loki.resources.requests.memory"
@@ -29,8 +180,7 @@ resource "helm_release" "loki" {
   }
 
   set {
-    name  = "loki.persistence.size"
-    value = var.persistence_size
-    type  = "string"
+    name = "loki.serviceAccount.annotations.eks\\.amazonaws\\.com/role-arn"
+    value = module.iam.this_iam_role_arn
   }
 }

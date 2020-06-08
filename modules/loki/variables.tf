@@ -33,3 +33,20 @@ variable "resources_request_memory" {
   default     = "256Mi"
   description = "Requested memory resources for loki"
 }
+
+variable "cluster_name" {
+  description = "Name of the EKS cluster to deply Loki into."
+  type        = string
+}
+
+
+variable "oidc_provider_issuer_url" {
+  description = "Issuer used in the OIDC provider associated with the EKS cluster to support IRSA."
+  type        = string
+}
+
+variable "tags" {
+  description = "Tags to apply to taggable resources provisioned by this module."
+  type        = map(string)
+  default     = {}
+}

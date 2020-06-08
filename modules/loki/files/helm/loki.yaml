@@ -1,6 +1,5 @@
 loki:
   persistence:
-    enabled: true
+    enabled: false
   networkPolicy:
     enabled: true
-

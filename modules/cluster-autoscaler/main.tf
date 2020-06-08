@@ -1,6 +1,14 @@
 data "aws_region" "current" {}
 
 locals {
+  chart_name    = "cluster-autoscaler"
+  chart_version = var.chart_version
+  release_name  = "aws-cluster-autoscaler"
+  namespace     = var.namespace
+  repository    = "https://kubernetes-charts.storage.googleapis.com"
+
+  provider_url = replace(var.oidc_provider_issuer_url, "https://", "")
+
   # Use supplied tags if provided, otherwise use defaults.
   asg_tags = length(var.asg_tags) > 0 ? var.tags : {
     "k8s.io/cluster-autoscaler/${var.cluster_name}" = "owned"
@@ -9,12 +17,13 @@ locals {
 }
 
 module "iam" {
-  source = "github.com/terraform-aws-modules/terraform-aws-iam//modules/iam-assumable-role-with-oidc?ref=v2.10.0"
+  source                            = "terraform-aws-modules/iam/aws//modules/iam-assumable-role-with-oidc"
+  # source = "github.com/terraform-aws-modules/terraform-aws-iam//modules/iam-assumable-role-with-oidc?ref=v2.10.0"
 
   create_role                   = var.enable
   role_name                     = "${var.cluster_name}-cluster-autoscaler-irsa"
-  provider_url                  = var.oidc_provider_issuer_url
-  oidc_fully_qualified_subjects = ["system:serviceaccount:${kubernetes_namespace.cluster_autoscaler.0.metadata.0.name}:aws-cluster-autoscaler"]
+  provider_url                  = local.provider_url
+  oidc_fully_qualified_subjects = ["system:serviceaccount:${local.namespace}:aws-cluster-autoscaler"]
 
   tags = var.tags
 }
@@ -67,22 +76,14 @@ resource "aws_iam_role_policy" "cluster_autoscaler" {
   policy = data.aws_iam_policy_document.cluster_autoscaler.json
 }
 
-resource "kubernetes_namespace" "cluster_autoscaler" {
-  count = var.enable ? 1 : 0
-
-  metadata {
-    name = "cluster-autoscaler"
-  }
-}
-
 resource "helm_release" "cluster_autoscaler" {
   count = var.enable ? 1 : 0
 
-  name       = "aws-cluster-autoscaler"
-  chart      = "cluster-autoscaler"
-  version    = var.chart_version
-  repository = "https://kubernetes-charts.storage.googleapis.com"
-  namespace  = kubernetes_namespace.cluster_autoscaler.0.metadata.0.name
+  name       = local.release_name
+  chart      = local.chart_name
+  version    = local.chart_version
+  repository = local.repository
+  namespace  = local.namespace
 
   set {
     name  = "cloudProvider"

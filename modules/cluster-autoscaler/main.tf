@@ -17,7 +17,7 @@ locals {
 }
 
 module "iam" {
-  source                            = "terraform-aws-modules/iam/aws//modules/iam-assumable-role-with-oidc"
+  source = "terraform-aws-modules/iam/aws//modules/iam-assumable-role-with-oidc"
   # source = "github.com/terraform-aws-modules/terraform-aws-iam//modules/iam-assumable-role-with-oidc?ref=v2.10.0"
 
   create_role                   = var.enable

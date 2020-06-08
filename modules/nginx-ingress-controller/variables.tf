@@ -1,5 +1,5 @@
 
-variable "eks_cluster_name" {
+variable "cluster_name" {
   description = "the eks-clusrter name to install the ingress cotroller in"
   type        = string
 }

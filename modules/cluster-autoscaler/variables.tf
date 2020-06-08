@@ -13,6 +13,12 @@ variable "enable" {
   default     = true
 }
 
+variable "namespace" {
+  description = "Namespace to install cluster-autoscaler in"
+  default     = "kube-system"
+  type        = string
+}
+
 variable "asg_tags" {
   description = "The tags to look for when detecting Auto-Scaling Groups. Defaults are documented here: https://github.com/kubernetes/autoscaler/tree/master/cluster-autoscaler/cloudprovider/aws#auto-discovery-setup."
   type        = map(string)

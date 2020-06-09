@@ -1,4 +1,10 @@
 
+#-------------------------------------------------------------------------------
+# MODULE PARAMETERS
+
+# Theses variabels are expected to be passed in by the operator when caling this module
+#-------------------------------------------------------------------------------
+
 variable "cluster_name" {
   description = "the eks-clusrter name to install the ingress cotroller in"
   type        = string
@@ -6,6 +12,22 @@ variable "cluster_name" {
 
 variable "lb_fqdn" {
   description = "the FQDN address to set as the load-balancer status of Ingress"
+}
+
+
+# Optional variables with default value
+#-------------------------------------------------------------------------------
+
+variable "enable" {
+  type    = bool
+  default = true
+}
+
+
+variable "nginx_ingress_chart_version" {
+  description = "the nginx helm chart version"
+  default     = "1.36.2"
+
 }
 
 variable "kubernetes_namespace" {
@@ -22,17 +44,5 @@ variable "controller_service_nodeports_https" {
   description = "List of https ports that map Ingress's ports 443 to be open for service"
   default     = "32443"
 }
-
-variable "nginx_ingress_chart_version" {
-  description = "the nginx helm chart version"
-  default     = "1.36.2"
-
-}
-
-variable "enable" {
-  type    = bool
-  default = true
-}
-
 
 

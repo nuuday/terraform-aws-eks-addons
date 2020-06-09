@@ -1,43 +1,14 @@
 
 
-data "aws_eks_cluster" "this" {
-  name = var.cluster_name
-}
-
-data "aws_eks_cluster_auth" "this" {
-  name = var.cluster_name
-}
-
-provider "helm" {
-  kubernetes {
-    host                   = data.aws_eks_cluster.this.endpoint
-    cluster_ca_certificate = base64decode(data.aws_eks_cluster.this.certificate_authority.0.data)
-    token                  = data.aws_eks_cluster_auth.this.token
-    load_config_file       = false
-  }
-}
-
-provider "kubernetes" {
-  host                   = data.aws_eks_cluster.this.endpoint
-  cluster_ca_certificate = base64decode(data.aws_eks_cluster.this.certificate_authority.0.data)
-  token                  = data.aws_eks_cluster_auth.this.token
-  load_config_file       = false
-  version                = "~> 1.9"
-}
-
-
-
-resource "kubernetes_namespace" "nginx_ingress" {
-  count = var.enable == true ? 1 : 0
-
-  metadata {
-    name = var.kubernetes_namespace
-  }
-
-}
-
 # Add Kubernetes Stable Helm charts repo
 # https://github.com/helm/charts/tree/master/stable/nginx-ingress
+
+resource "null_resource" "update_helm_repo" {
+  provisioner "local-exec" {
+    command = "helm repo update"
+  }
+}
+
 
 resource "helm_release" "nginx_ingress" {
   count = var.enable == true ? 1 : 0
@@ -88,5 +59,10 @@ resource "helm_release" "nginx_ingress" {
     name  = "defaultBackend.nodeSelector.kubernetes\\.io/os"
     value = "linux"
   }
+
+  depends_on = [
+    null_resource.update_helm_repo
+  ]
+
 }
 

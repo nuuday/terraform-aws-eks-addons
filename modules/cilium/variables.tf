@@ -1,3 +1,8 @@
+variable "cluster_name" {
+  description = "Cilium cluster name"
+  type        = string
+}
+
 variable "enable" {
   default     = true
   description = "Enable or Disable cilium."
@@ -20,9 +25,4 @@ variable "cluster_id" {
   default     = "1"
   description = "Cilium cluster id"
   type        = number
-}
-
-variable "cluster_name" {
-  description = "Cilium cluster name"
-  type        = string
 }

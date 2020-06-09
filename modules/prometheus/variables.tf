@@ -1,3 +1,8 @@
+variable "cluster_name" {
+  description = "Name of the EKS cluster to deply prometheus into."
+  type        = string
+}
+
 variable "chart_version" {
   default     = "11.3.0"
   description = "prometheus version to install"
@@ -9,7 +14,6 @@ variable "namespace" {
   description = "Namespace to install prometheus in"
   type        = string
 }
-
 
 variable "enable" {
   default     = true
@@ -28,7 +32,6 @@ variable "retention" {
   default     = "720h"
   description = "Retention period"
 }
-
 
 variable "resources_request_cpu" {
   type        = string

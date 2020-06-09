@@ -1,3 +1,8 @@
+variable "cluster_name" {
+  description = "Name of the EKS cluster to deply kube-monkey into."
+  type        = string
+}
+
 variable "enable" {
   default     = true
   description = "Enable or Disable kube-monkey."

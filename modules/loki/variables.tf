@@ -1,3 +1,8 @@
+variable "cluster_name" {
+  description = "Name of the EKS cluster to deply loki into."
+  type        = string
+}
+
 variable "chart_version" {
   default     = "0.37.3"
   description = "Loki version to install"

@@ -36,13 +36,6 @@ resource "kubernetes_namespace" "nginx_ingress" {
 
 }
 
-resource "null_resource" "update_helm_repo" {
-  provisioner "local-exec" {
-    command = "helm repo update"
-  }
-}
-
-
 # Add Kubernetes Stable Helm charts repo
 # https://github.com/helm/charts/tree/master/stable/nginx-ingress
 
@@ -95,9 +88,5 @@ resource "helm_release" "nginx_ingress" {
     name  = "defaultBackend.nodeSelector.kubernetes\\.io/os"
     value = "linux"
   }
-
-  depends_on = [
-    null_resource.update_helm_repo
-  ]
 }
 

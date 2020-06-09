@@ -1,10 +1,8 @@
-# nginx-ingress-controler
 This terraform module deploy a Nginx Ingress Controller on an EKS cluster.
 
-
 ## Prerequisites
-This module uses the kubernetes.
-This module uses the helm provider.
+- This module uses the kubernetes.
+- This module uses the helm provider.
 
 ## Usage eaxmple
 ```

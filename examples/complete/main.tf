@@ -1,10 +1,14 @@
 terraform {
-  required_version = "~>0.12"
+  required_version = "~> 0.12"
 
   required_providers {
-    aws  = "~>2.60"
-    http = "~>1.2"
+    http = "~> 1.2"
   }
+}
+
+provider "aws" {
+  version = "~> 2.60"
+  region  = "eu-central-1"
 }
 
 data "aws_eks_cluster" "cluster" {
@@ -184,16 +188,28 @@ module "eks" {
         aws_security_group.worker_http_ingress.id,
         aws_security_group.worker_https_ingress.id,
       ]
+
+      tags = [for k, v in module.addon_cluster_autoscaler.asg_tags :
+        {
+          key                 = k
+          value               = v
+          propagate_at_launch = true
+        }
+      ]
     },
   ]
 
   tags = local.tags
 }
 
-module "addons" {
+module "addon_metrics_server" {
+  source = "../../modules/metrics-server"
+}
+
+module "addon_cluster_autoscaler" {
   source = "../../modules/cluster-autoscaler"
 
-  cluster_name         = module.eks.cluster_id
-  oidc_provider_issuer = local.oidc_issuer
-  oidc_provider_arn    = module.eks.oidc_provider_arn
+  cluster_name             = module.eks.cluster_id
+  oidc_provider_issuer_url = module.eks.cluster_oidc_issuer_url
+  oidc_provider_arn        = module.eks.oidc_provider_arn
 }

@@ -146,7 +146,7 @@ resource "aws_iam_role_policy" "loki" {
 module "s3_bucket" {
   source = "terraform-aws-modules/s3-bucket/aws"
 
-  bucket_prefix = local.bucket_name
+  bucket        = local.bucket_name
   acl           = "private"
   force_destroy = true
 

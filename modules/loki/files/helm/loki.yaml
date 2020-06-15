@@ -1,5 +1,0 @@
-loki:
-  persistence:
-    enabled: false
-  networkPolicy:
-    enabled: true

@@ -60,8 +60,9 @@ locals {
           retention_deletes_enabled = true
           retention_period          = "720h"
           index_tables_provisioning = {
-            provisioned_write_throughput = 30
-            provisioned_read_throughput  = 3
+            provisioned_write_throughput = 1
+            provisioned_read_throughput  = 1
+
             write_scale = {
               enabled      = true
               min_capacity = 1
@@ -157,7 +158,7 @@ data "aws_iam_policy_document" "loki" {
 resource "aws_iam_role_policy" "loki" {
   count = var.enable ? 1 : 0
 
-  name = "LokiStorage"
+  name = local.bucket_name
   role = module.iam.this_iam_role_name
 
   policy = data.aws_iam_policy_document.loki.json
@@ -187,7 +188,7 @@ resource "helm_release" "loki" {
   namespace  = local.namespace
 
   wait   = false
-  values = [file("${path.module}/files/helm/loki.yaml"), yamlencode(local.loki_values)]
+  values = [yamlencode(local.loki_values)]
 
   set {
     name  = "loki.resources.requests.memory"

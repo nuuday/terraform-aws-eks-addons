@@ -1,3 +1,5 @@
+
+
 variable "chart_version" {
   default     = "11.3.0"
   description = "prometheus version to install"
@@ -30,14 +32,18 @@ variable "retention" {
 }
 
 
-variable "resources_request_cpu" {
-  type        = string
-  default     = "100m"
-  description = "Requested cpu resources for loki"
+variable "alertmanager_enable" {
+  default     = true
+  description = "Enable or disable alert manager"
+  type        = bool
 }
 
-variable "resources_request_memory" {
-  type        = string
-  default     = "256Mi"
-  description = "Requested memory resources for loki"
+variable "pushgateway_enable" {
+  default     = false
+  description = "Enable or disable push gateway"
+  type        = bool
+}
+
+variable "prometheus_config" {
+  default = []
 }

@@ -1,18 +1,3 @@
-variable "alertmanager_enable" {
-  default     = true
-  description = "Enable or disable alert manager"
-  type        = bool
-}
-
-variable "pushgateway_enable" {
-  default     = false
-  description = "Enable or disable push gateway"
-  type        = bool
-}
-
-variable "prometheus_config" {
-  default = []
-}
 locals {
   chart_name    = "prometheus"
   chart_version = var.chart_version

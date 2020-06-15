@@ -17,7 +17,15 @@ locals {
         }
       }
     }
+
+    #     name  = "loki.serviceAccount.annotations.eks\\.amazonaws\\.com/role-arn"
+
     loki = {
+      serviceAccount = {
+        annotations = {
+          "eks.amazonaws.com/role-arn" = module.iam.this_iam_role_arn
+        }
+      }
       resources = {
         requests = {
           cpu = "200m"
@@ -101,7 +109,7 @@ data "aws_iam_policy_document" "loki" {
       "s3:PutObject",
       "s3:GetObject"
     ]
-    resources = ["arn:aws:s3:::${local.bucket_name}", "arn:aws:s3:::${local.bucket_name}/*"]
+    resources = [module.s3_bucket.this_s3_bucket_arn, "${module.s3_bucket.this_s3_bucket_arn}/*"]
   }
 
   statement {
@@ -190,19 +198,10 @@ resource "helm_release" "loki" {
   wait   = false
   values = [yamlencode(local.loki_values)]
 
-  set {
-    name  = "loki.resources.requests.memory"
-    value = var.resources_request_memory
-    type  = "string"
-  }
-  set {
-    name  = "loki.resources.requests.cpu"
-    value = var.resources_request_cpu
-    type  = "string"
-  }
 
-  set {
+
+/*  set {
     name  = "loki.serviceAccount.annotations.eks\\.amazonaws\\.com/role-arn"
     value = module.iam.this_iam_role_arn
-  }
+  }*/
 }

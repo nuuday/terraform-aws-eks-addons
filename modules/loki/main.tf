@@ -12,13 +12,11 @@ locals {
     promtail = {
       resources = {
         requests = {
-          cpu = "50m"
+          cpu    = "50m"
           memory = "128Mi"
         }
       }
     }
-
-    #     name  = "loki.serviceAccount.annotations.eks\\.amazonaws\\.com/role-arn"
 
     loki = {
       serviceAccount = {
@@ -28,7 +26,7 @@ locals {
       }
       resources = {
         requests = {
-          cpu = "200m"
+          cpu    = "200m"
           memory = "256Mi"
         }
       }
@@ -200,7 +198,7 @@ resource "helm_release" "loki" {
 
 
 
-/*  set {
+  /*  set {
     name  = "loki.serviceAccount.annotations.eks\\.amazonaws\\.com/role-arn"
     value = module.iam.this_iam_role_arn
   }*/

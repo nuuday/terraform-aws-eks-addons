@@ -16,24 +16,6 @@ variable "enable" {
   type        = bool
 }
 
-variable "persistence_size" {
-  type        = string
-  default     = "10Gi"
-  description = "Available disk space"
-}
-
-variable "resources_request_cpu" {
-  type        = string
-  default     = "100m"
-  description = "Requested cpu resources for loki"
-}
-
-variable "resources_request_memory" {
-  type        = string
-  default     = "256Mi"
-  description = "Requested memory resources for loki"
-}
-
 variable "cluster_name" {
   description = "Name of the EKS cluster to deply Loki into."
   type        = string

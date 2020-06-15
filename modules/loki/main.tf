@@ -8,8 +8,28 @@ locals {
   bucket_name    = "${var.cluster_name}-loki-${data.aws_caller_identity.loki.account_id}"
   dynamodb_table = "${var.cluster_name}-loki"
 
-  loki_storage_s3 = {
+  loki_values = {
+    promtail = {
+      resources = {
+        requests = {
+          cpu = "50m"
+          memory = "128Mi"
+        }
+      }
+    }
     loki = {
+      resources = {
+        requests = {
+          cpu = "200m"
+          memory = "256Mi"
+        }
+      }
+      persistence = {
+        enabled = false
+      }
+      networkPolicy = {
+        enabled = true
+      }
       config = {
         schema_config = {
           configs : [
@@ -167,7 +187,7 @@ resource "helm_release" "loki" {
   namespace  = local.namespace
 
   wait   = false
-  values = [file("${path.module}/files/helm/loki.yaml"), yamlencode(local.loki_storage_s3)]
+  values = [file("${path.module}/files/helm/loki.yaml"), yamlencode(local.loki_values)]
 
   set {
     name  = "loki.resources.requests.memory"

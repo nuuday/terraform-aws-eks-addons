@@ -10,8 +10,17 @@ project adheres to [Semantic Versioning](http://semver.org/).
 
 
 
+<a name="v0.2.1"></a>
+## [v0.2.1] - 2020-06-08
+**BUG FIXES**
+- remove scheme from OIDC issuer URL to fix cluster-autoscaler IRSA
+
+**ENHANCEMENTS**
+- output ASG tags from cluster-autoscaler
+
+
 <a name="v0.2.0"></a>
-## [v0.2.0] - 2020-06-04
+## [v0.2.0] - 2020-06-08
 **BUG FIXES**
 - change all 'enabled' variables to 'enable'
 - rename variable oidc_provider_issuer to oidc_provider_url
@@ -35,5 +44,6 @@ project adheres to [Semantic Versioning](http://semver.org/).
 - add cluster-autoscaler
 
 
-[Unreleased]: https://github.com/nuuday/terraform-aws-eks-addons/compare/v0.2.0...HEAD
+[Unreleased]: https://github.com/nuuday/terraform-aws-eks-addons/compare/v0.2.1...HEAD
+[v0.2.1]: https://github.com/nuuday/terraform-aws-eks-addons/compare/v0.2.0...v0.2.1
 [v0.2.0]: https://github.com/nuuday/terraform-aws-eks-addons/compare/v0.1.0...v0.2.0

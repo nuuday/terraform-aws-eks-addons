@@ -16,20 +16,19 @@ variable "enable" {
   type        = bool
 }
 
-variable "persistence_size" {
+variable "cluster_name" {
+  description = "Name of the EKS cluster to deply Loki into."
   type        = string
-  default     = "10Gi"
-  description = "Available disk space"
 }
 
-variable "resources_request_cpu" {
+
+variable "oidc_provider_issuer_url" {
+  description = "Issuer used in the OIDC provider associated with the EKS cluster to support IRSA."
   type        = string
-  default     = "100m"
-  description = "Requested cpu resources for loki"
 }
 
-variable "resources_request_memory" {
-  type        = string
-  default     = "256Mi"
-  description = "Requested memory resources for loki"
+variable "tags" {
+  description = "Tags to apply to taggable resources provisioned by this module."
+  type        = map(string)
+  default     = {}
 }

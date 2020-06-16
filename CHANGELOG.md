@@ -10,6 +10,15 @@ project adheres to [Semantic Versioning](http://semver.org/).
 
 
 
+<a name="v0.2.2"></a>
+## [v0.2.2] - 2020-06-16
+**FEATURES**
+- clean up Prometheus configuration and added default sane kubernetes alerts
+
+**DOCS**
+- add MIT license
+
+
 <a name="v0.2.1"></a>
 ## [v0.2.1] - 2020-06-08
 **BUG FIXES**
@@ -44,6 +53,7 @@ project adheres to [Semantic Versioning](http://semver.org/).
 - add cluster-autoscaler
 
 
-[Unreleased]: https://github.com/nuuday/terraform-aws-eks-addons/compare/v0.2.1...HEAD
+[Unreleased]: https://github.com/nuuday/terraform-aws-eks-addons/compare/v0.2.2...HEAD
+[v0.2.2]: https://github.com/nuuday/terraform-aws-eks-addons/compare/v0.2.1...v0.2.2
 [v0.2.1]: https://github.com/nuuday/terraform-aws-eks-addons/compare/v0.2.0...v0.2.1
 [v0.2.0]: https://github.com/nuuday/terraform-aws-eks-addons/compare/v0.1.0...v0.2.0

@@ -5,8 +5,10 @@ locals {
   namespace      = var.namespace
   repository     = "https://grafana.github.io/loki/charts"
   provider_url   = replace(var.oidc_provider_issuer_url, "https://", "")
-  bucket_name    = "${var.cluster_name}-loki-${data.aws_caller_identity.loki.account_id}"
-  dynamodb_table = "${var.cluster_name}-loki"
+  bucket_prefix  = "${var.cluster_name}-loki"
+  bucket_name    = module.s3_bucket.this_s3_bucket_id
+  dynamodb_table = local.bucket_name
+  role_name      = local.bucket_name
 
   loki_values = {
     promtail = {
@@ -53,7 +55,7 @@ locals {
         # Read more here: https://github.com/grafana/loki/tree/master/docs/configuration#storage_config
         storage_config = {
           aws = {
-            s3 = "s3://${data.aws_region.loki.name}/${local.bucket_name}"
+            s3 = "s3://${module.s3_bucket.this_s3_bucket_region}/${module.s3_bucket.this_s3_bucket_id}"
             dynamodb = {
               dynamodb_url = "dynamodb://${data.aws_region.loki.name}"
               metrics = {
@@ -88,17 +90,6 @@ locals {
 
 data aws_caller_identity "loki" {}
 data aws_region "loki" {}
-
-module "iam" {
-  source = "terraform-aws-modules/iam/aws//modules/iam-assumable-role-with-oidc"
-
-  create_role                   = var.enable
-  role_name                     = "${var.cluster_name}-loki-irsa"
-  provider_url                  = local.provider_url
-  oidc_fully_qualified_subjects = ["system:serviceaccount:${local.namespace}:loki"]
-
-  tags = var.tags
-}
 
 data "aws_iam_policy_document" "loki" {
   statement {
@@ -164,16 +155,28 @@ data "aws_iam_policy_document" "loki" {
 resource "aws_iam_role_policy" "loki" {
   count = var.enable ? 1 : 0
 
-  name = local.bucket_name
+  name = local.role_name
   role = module.iam.this_iam_role_name
 
   policy = data.aws_iam_policy_document.loki.json
 }
 
-module "s3_bucket" {
-  source = "terraform-aws-modules/s3-bucket/aws"
+module "iam" {
+  source = "terraform-aws-modules/iam/aws//modules/iam-assumable-role-with-oidc"
 
-  bucket        = local.bucket_name
+  create_role                   = var.enable
+  role_name                     = module.s3_bucket.this_s3_bucket_id
+  provider_url                  = local.provider_url
+  oidc_fully_qualified_subjects = ["system:serviceaccount:${local.namespace}:loki"]
+
+  tags = var.tags
+}
+
+
+module "s3_bucket" {
+  source        = "terraform-aws-modules/s3-bucket/aws"
+  create_bucket = var.enable
+  bucket_prefix = local.bucket_prefix
   acl           = "private"
   force_destroy = true
 

@@ -4,6 +4,12 @@ terraform {
   required_providers {
     http = "~> 1.2"
   }
+
+  backend "s3" {
+    bucket = "odin-infra-dev"
+    key    = "infrastructure/asore/terraform-aws-eks-addons-example.tfstate"
+    region = "eu-central-1"
+  }
 }
 
 provider "aws" {

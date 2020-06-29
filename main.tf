@@ -16,7 +16,7 @@ provider "aws" {
 }
 
 module "aws_node_termination_handler" {
-  source        = "./modules/aws-node-termination-handler"
+  source = "./modules/aws-node-termination-handler"
 
   enable        = lookup(var.aws_node_termination_handler, "enable", "false")
   chart_version = lookup(var.aws_node_termination_handler, "chart_version", "0.7.5")
@@ -29,8 +29,8 @@ module "aws_node_termination_handler" {
 # }
 
 module "cilium" {
-  source        = "./modules/cilium"
-  
+  source = "./modules/cilium"
+
   enable        = lookup(var.cilium, "enable", "false")
   cluster_name  = lookup(var.cilium, "cluster_name", "cilium-cluster")
   chart_version = lookup(var.cilium, "chart_version", "1.7.4")
@@ -39,8 +39,8 @@ module "cilium" {
 }
 
 module "cluster_autoscaler" {
-  source                   = "./modules/cluster-autoscaler"
-  
+  source = "./modules/cluster-autoscaler"
+
   tags                     = var.tags
   enable                   = lookup(var.cluster_autoscaler, "enable", "false")
   cluster_name             = lookup(var.cluster_autoscaler, "cluster_name", "")
@@ -56,40 +56,40 @@ module "cluster_autoscaler" {
 # }
 
 module "kube_monkey" {
-  source       = "./modules/kube-monkey"
-  
-  enable       = lookup(var.kube_monkey, "enable", "false")
-  namespace    = lookup(var.kube_monkey, "namespace", "kube-system")
-  dry_run      = lookup(var.kube_monkey, "dry_run", "false")
-  run_hour     = lookup(var.kube_monkey, "run_hour", 7)
-  start_hour   = lookup(var.kube_monkey, "start_hour", 10)
-  end_hour     = lookup(var.kube_monkey, "end_hour", 15)
-  timezone     = lookup(var.kube_monkey, "timezone", "Europe/Copenhagen")
+  source = "./modules/kube-monkey"
+
+  enable     = lookup(var.kube_monkey, "enable", "false")
+  namespace  = lookup(var.kube_monkey, "namespace", "kube-system")
+  dry_run    = lookup(var.kube_monkey, "dry_run", "false")
+  run_hour   = lookup(var.kube_monkey, "run_hour", 7)
+  start_hour = lookup(var.kube_monkey, "start_hour", 10)
+  end_hour   = lookup(var.kube_monkey, "end_hour", 15)
+  timezone   = lookup(var.kube_monkey, "timezone", "Europe/Copenhagen")
 }
 
 module "loki" {
-  source                   = "./modules/loki"
+  source = "./modules/loki"
 
-  cluster_name             = lookup(var.loki, "cluster_name", "")
-  enable                   = lookup(var.loki, "enable", "false")
-  chart_version            = lookup(var.loki, "chart_version", "0.37.3")
-  namespace                = lookup(var.loki, "namespace", "kube-system")
+  cluster_name  = lookup(var.loki, "cluster_name", "")
+  enable        = lookup(var.loki, "enable", "false")
+  chart_version = lookup(var.loki, "chart_version", "0.37.3")
+  namespace     = lookup(var.loki, "namespace", "kube-system")
 }
 
 module "metrics_server" {
-  source        = "./modules/metrics-server"
-  
+  source = "./modules/metrics-server"
+
   enable        = lookup(var.loki, "enable", "false")
   chart_version = lookup(var.loki, "chart_version", "11.3.0")
   namespace     = lookup(var.loki, "namespace", "kube-system")
 }
 
 module "prometheus" {
-  source                   = "./modules/prometheus"
+  source = "./modules/prometheus"
 
-  enable                   = lookup(var.prometheus, "enable", "false")
-  chart_version            = lookup(var.prometheus, "chart_version", "11.3.0")
-  namespace                = lookup(var.prometheus, "namespace", "kube-system")
-  persistence_size         = lookup(var.prometheus, "persistence_size", "10Gi")
-  retention                = lookup(var.prometheus, "retention", "720h")
+  enable           = lookup(var.prometheus, "enable", "false")
+  chart_version    = lookup(var.prometheus, "chart_version", "11.3.0")
+  namespace        = lookup(var.prometheus, "namespace", "kube-system")
+  persistence_size = lookup(var.prometheus, "persistence_size", "10Gi")
+  retention        = lookup(var.prometheus, "retention", "720h")
 }

@@ -20,46 +20,46 @@ variable "tags" {
 }
 
 variable "aws_node_termination_handler" {
-  type = any
+  type    = any
   default = {}
 }
 
 variable "cert_manager" {
-  type = any
+  type    = any
   default = {}
 }
 
 variable "cilium" {
-  type = any
+  type    = any
   default = {}
 }
 
 variable "cluster_autoscaler" {
-  type = any
+  type    = any
   default = {}
 }
 
 variable "external_dns" {
-  type = any
+  type    = any
   default = {}
 }
 
 variable "kube_monkey" {
-  type = any
+  type    = any
   default = {}
 }
 
 variable "loki" {
-  type = any
+  type    = any
   default = {}
 }
 
 variable "metrics_server" {
-  type = any
+  type    = any
   default = {}
 }
 
 variable "prometheus" {
-  type = any
+  type    = any
   default = {}
 }

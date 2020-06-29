@@ -21,12 +21,6 @@ variable "enable" {
   type        = bool
 }
 
-variable "cluster_name" {
-  description = "Name of the EKS cluster to deply Loki into."
-  type        = string
-}
-
-
 variable "oidc_provider_issuer_url" {
   description = "Issuer used in the OIDC provider associated with the EKS cluster to support IRSA."
   type        = string

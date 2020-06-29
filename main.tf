@@ -41,9 +41,9 @@ module "cilium" {
 module "cluster_autoscaler" {
   source                   = "./modules/cluster-autoscaler"
   
-  cluster_name             = var.cluster_name
   tags                     = var.tags
   enable                   = lookup(var.cluster_autoscaler, "enable", "false")
+  cluster_name             = lookup(var.cluster_autoscaler, "cluster_name", "")
   asg_tags                 = lookup(var.cluster_autoscaler, "asg_tags", {})
   chart_version            = lookup(var.cluster_autoscaler, "chart_version", "7.0.0")
   oidc_provider_issuer_url = lookup(var.cluster_autoscaler, "oidc_provider_issuer_url", "")
@@ -70,7 +70,7 @@ module "kube_monkey" {
 module "loki" {
   source                   = "./modules/loki"
 
-  cluster_name             = var.cluster_name
+  cluster_name             = lookup(var.loki, "cluster_name", "")
   enable                   = lookup(var.loki, "enable", "false")
   chart_version            = lookup(var.loki, "chart_version", "0.37.3")
   namespace                = lookup(var.loki, "namespace", "kube-system")

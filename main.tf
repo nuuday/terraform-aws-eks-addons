@@ -43,7 +43,6 @@ module "cluster_autoscaler" {
   
   cluster_name             = var.cluster_name
   tags                     = var.tags
-  
   enable                   = lookup(var.cluster_autoscaler, "enable", "false")
   asg_tags                 = lookup(var.cluster_autoscaler, "asg_tags", {})
   chart_version            = lookup(var.cluster_autoscaler, "chart_version", "7.0.0")
@@ -72,7 +71,6 @@ module "loki" {
   source                   = "./modules/loki"
 
   cluster_name             = var.cluster_name
-  
   enable                   = lookup(var.loki, "enable", "false")
   chart_version            = lookup(var.loki, "chart_version", "0.37.3")
   namespace                = lookup(var.loki, "namespace", "kube-system")
@@ -80,8 +78,6 @@ module "loki" {
 
 module "metrics_server" {
   source        = "./modules/metrics-server"
-  
-  cluster_name  = var.cluster_name
   
   enable        = lookup(var.loki, "enable", "false")
   chart_version = lookup(var.loki, "chart_version", "11.3.0")

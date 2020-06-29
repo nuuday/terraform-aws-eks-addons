@@ -1,3 +1,7 @@
+output "tags" {
+  value = var.tags
+}
+
 output "aws_node_termination_handler" {
   value = module.aws_node_termination_handler
 }

@@ -100,13 +100,9 @@ module "metrics_server" {
 module "prometheus" {
   source                   = "./modules/prometheus"
 
-  cluster_name             = var.cluster_name
-  
   enable                   = lookup(var.prometheus, "enable", "false")
   chart_version            = lookup(var.prometheus, "chart_version", "11.3.0")
   namespace                = lookup(var.prometheus, "namespace", "kube-system")
   persistence_size         = lookup(var.prometheus, "persistence_size", "10Gi")
   retention                = lookup(var.prometheus, "retention", "720h")
-  resources_request_cpu    = lookup(var.prometheus, "resources_request_cpu", "100m")
-  resources_request_memory = lookup(var.prometheus, "resources_request_memory", "256Mi")
 }

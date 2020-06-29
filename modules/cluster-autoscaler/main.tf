@@ -1,4 +1,6 @@
-data "aws_region" "current" {}
+data "aws_region" "current" {
+  count = var.enable ? 1 : 0
+}
 
 data "aws_eks_cluster" "this" {
   count = var.enable ? 1 : 0
@@ -16,7 +18,7 @@ locals {
 
   # Use supplied tags if provided, otherwise use defaults.
   asg_tags = length(var.asg_tags) > 0 ? var.tags : {
-    "k8s.io/cluster-autoscaler/${var.cluster_name}" = "owned"
+    "k8s.io/cluster-autoscaler/${data.aws_eks_cluster.this[0].id}" = "owned"
     "k8s.io/cluster-autoscaler/enabled"             = "true"
   }
 }
@@ -25,7 +27,7 @@ module "iam" {
   source = "github.com/terraform-aws-modules/terraform-aws-iam//modules/iam-assumable-role-with-oidc?ref=v2.10.0"
 
   create_role                   = var.enable
-  role_name                     = "${var.cluster_name}-cluster-autoscaler-irsa"
+  role_name                     = "${data.aws_eks_cluster.this[0].id}-cluster-autoscaler-irsa"
   provider_url                  = local.provider_url
   oidc_fully_qualified_subjects = ["system:serviceaccount:${local.namespace}:${local.service_account}"]
 
@@ -33,6 +35,7 @@ module "iam" {
 }
 
 data "aws_iam_policy_document" "cluster_autoscaler" {
+  count = var.enable ? 1 : 0
   statement {
     sid = "Read"
 
@@ -77,7 +80,7 @@ resource "aws_iam_role_policy" "cluster_autoscaler" {
   name = "ClusterAutoscaler"
   role = module.iam.this_iam_role_name
 
-  policy = data.aws_iam_policy_document.cluster_autoscaler.json
+  policy = data.aws_iam_policy_document.cluster_autoscaler[0].json
 }
 
 resource "helm_release" "cluster_autoscaler" {
@@ -97,7 +100,7 @@ resource "helm_release" "cluster_autoscaler" {
 
   set {
     name  = "awsRegion"
-    value = data.aws_region.current.name
+    value = data.aws_region.current[0].name
   }
 
   set {
@@ -122,7 +125,7 @@ resource "helm_release" "cluster_autoscaler" {
 
   set {
     name  = "autoDiscovery.clusterName"
-    value = var.cluster_name
+    value = data.aws_eks_cluster.this[0].id
   }
 
   set {

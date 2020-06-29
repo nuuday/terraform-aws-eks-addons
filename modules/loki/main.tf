@@ -62,7 +62,7 @@ locals {
           aws = {
             s3 = "s3://${module.s3_bucket.this_s3_bucket_region}/${module.s3_bucket.this_s3_bucket_id}"
             dynamodb = {
-              dynamodb_url = "dynamodb://${data.aws_region.loki.name}"
+              dynamodb_url = "dynamodb://${data.aws_region.loki[0].name}"
               metrics = {
                 url : "http://prometheus-server.kube-system.svc.cluster.local:9090"
               }
@@ -93,10 +93,17 @@ locals {
   }
 }
 
-data aws_caller_identity "loki" {}
-data aws_region "loki" {}
+data aws_caller_identity "loki" {
+  count = var.enable ? 1 : 0
+}
+
+data aws_region "loki" {
+  count = var.enable ? 1 : 0
+}
 
 data "aws_iam_policy_document" "loki" {
+  count = var.enable ? 1 : 0
+
   statement {
     actions = [
       "s3:ListBucket",
@@ -129,7 +136,7 @@ data "aws_iam_policy_document" "loki" {
       "dynamodb:DeleteTable"
     ]
 
-    resources = ["arn:aws:dynamodb:${data.aws_region.loki.name}:${data.aws_caller_identity.loki.account_id}:table/${local.dynamodb_table}*"]
+    resources = ["arn:aws:dynamodb:${data.aws_region.loki[0].name}:${data.aws_caller_identity.loki[0].account_id}:table/${local.dynamodb_table}*"]
   }
 
   statement {
@@ -163,7 +170,7 @@ resource "aws_iam_role_policy" "loki" {
   name = local.role_name
   role = module.iam.this_iam_role_name
 
-  policy = data.aws_iam_policy_document.loki.json
+  policy = data.aws_iam_policy_document.loki[0].json
 }
 
 module "iam" {

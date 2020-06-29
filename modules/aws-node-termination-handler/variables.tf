@@ -1,8 +1,3 @@
-variable "cluster_name" {
-  description = "Name of the EKS cluster to deply AWS Node Termination handler into."
-  type        = string
-}
-
 variable "chart_version" {
   default     = "0.7.5"
   description = "AWS Node Termination handler version"

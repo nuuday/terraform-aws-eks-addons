@@ -1,5 +1,5 @@
 variable "cluster_name" {
-  description = "Name of the EKS cluster to deply loki into."
+  description = "Name of the EKS cluster used to name S3 bucket."
   type        = string
 }
 

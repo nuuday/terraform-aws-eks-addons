@@ -1,5 +1,9 @@
 data "aws_region" "current" {}
 
+data "aws_eks_cluster" "this" {
+  name = var.cluster_name
+}
+
 locals {
   chart_name      = "cluster-autoscaler"
   chart_version   = var.chart_version
@@ -11,7 +15,7 @@ locals {
 
   # Use supplied tags if provided, otherwise use defaults.
   asg_tags = length(var.asg_tags) > 0 ? var.tags : {
-    "k8s.io/cluster-autoscaler/${var.cluster_name}" = "owned"
+    "k8s.io/cluster-autoscaler/${data.aws_eks_cluster.this.name}" = "owned"
     "k8s.io/cluster-autoscaler/enabled"             = "true"
   }
 }
@@ -20,7 +24,7 @@ module "iam" {
   source = "github.com/terraform-aws-modules/terraform-aws-iam//modules/iam-assumable-role-with-oidc?ref=v2.10.0"
 
   create_role                   = var.enable
-  role_name                     = "${var.cluster_name}-cluster-autoscaler-irsa"
+  role_name                     = "${data.aws_eks_cluster.this.name}-cluster-autoscaler-irsa"
   provider_url                  = local.provider_url
   oidc_fully_qualified_subjects = ["system:serviceaccount:${local.namespace}:${local.service_account}"]
 
@@ -117,7 +121,7 @@ resource "helm_release" "cluster_autoscaler" {
 
   set {
     name  = "autoDiscovery.clusterName"
-    value = var.cluster_name
+    value = data.aws_eks_cluster.this.name
   }
 
   set {

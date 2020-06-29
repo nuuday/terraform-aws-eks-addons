@@ -1,8 +1,3 @@
-variable "cluster_name" {
-  description = "Name of the EKS cluster to deply metrics-server into."
-  type        = string
-}
-
 variable "chart_version" {
   default     = "2.11.1"
   description = "Metrics-server version"

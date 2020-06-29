@@ -18,8 +18,6 @@ provider "aws" {
 module "aws_node_termination_handler" {
   source        = "./modules/aws-node-termination-handler"
 
-  cluster_name  = var.cluster_name
-
   enable        = lookup(var.aws_node_termination_handler, "enable", "false")
   chart_version = lookup(var.aws_node_termination_handler, "chart_version", "0.7.5")
   namespace     = lookup(var.aws_node_termination_handler, "namespace", "kube-system")
@@ -33,10 +31,8 @@ module "aws_node_termination_handler" {
 module "cilium" {
   source        = "./modules/cilium"
   
-  cluster_name  = var.cluster_name
-
   enable        = lookup(var.cilium, "enable", "false")
-
+  cluster_name  = lookup(var.cilium, "cluster_name", "cilium-cluster")
   chart_version = lookup(var.cilium, "chart_version", "1.7.4")
   namespace     = lookup(var.cilium, "namespace", "kube-system")
   cluster_id    = lookup(var.cilium, "cluster_id", 1)
@@ -62,8 +58,6 @@ module "cluster_autoscaler" {
 
 module "kube_monkey" {
   source       = "./modules/kube-monkey"
-  
-  cluster_name = var.cluster_name
   
   enable       = lookup(var.kube_monkey, "enable", "false")
   namespace    = lookup(var.kube_monkey, "namespace", "kube-system")

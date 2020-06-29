@@ -1,6 +1,7 @@
 variable "cluster_name" {
-  description = "Name of the EKS cluster to deply cluster-autoscaler into."
+  description = "Name of the EKS cluster the cluster-autoscaler is running in."
   type        = string
+  default     = ""
 }
 
 variable "chart_version" {

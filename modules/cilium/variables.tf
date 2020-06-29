@@ -1,6 +1,7 @@
 variable "cluster_name" {
   description = "Cilium cluster name"
   type        = string
+  default     = "cilium-cluster"
 }
 
 variable "enable" {

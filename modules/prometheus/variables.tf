@@ -1,8 +1,3 @@
-variable "cluster_name" {
-  description = "Name of the EKS cluster to deply prometheus into."
-  type        = string
-}
-
 variable "chart_version" {
   default     = "11.3.0"
   description = "prometheus version to install"

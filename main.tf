@@ -82,9 +82,6 @@ module "loki" {
   enable                   = lookup(var.loki, "enable", "false")
   chart_version            = lookup(var.loki, "chart_version", "0.37.3")
   namespace                = lookup(var.loki, "namespace", "kube-system")
-  persistence_size         = lookup(var.loki, "persistence_size", "10Gi")
-  resources_request_cpu    = lookup(var.loki, "resources_request_cpu", "100m")
-  resources_request_memory = lookup(var.loki, "resources_request_memory", "256Mi")
 }
 
 module "metrics_server" {

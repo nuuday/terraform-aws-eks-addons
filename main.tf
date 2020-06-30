@@ -23,9 +23,10 @@ module "aws_node_termination_handler" {
   namespace     = lookup(var.aws_node_termination_handler, "namespace", "kube-system")
 }
 
-# # module "cert_manager" {
-# #   source       = "./modules/cert-manager"
-# #   cert_manager = var.cert_manager
+#Missing
+# module "cert_manager" {
+#   source       = "./modules/cert-manager"
+#   cert_manager = var.cert_manager
 # }
 
 module "cilium" {
@@ -38,18 +39,20 @@ module "cilium" {
   cluster_id    = lookup(var.cilium, "cluster_id", 1)
 }
 
-module "cluster_autoscaler" {
-  source = "./modules/cluster-autoscaler"
+# Broken: Outputs tags when not applied
+# module "cluster_autoscaler" {
+#   source = "./modules/cluster-autoscaler"
 
-  tags                     = var.tags
-  enable                   = lookup(var.cluster_autoscaler, "enable", "false")
-  cluster_name             = lookup(var.cluster_autoscaler, "cluster_name", "")
-  asg_tags                 = lookup(var.cluster_autoscaler, "asg_tags", {})
-  chart_version            = lookup(var.cluster_autoscaler, "chart_version", "7.0.0")
-  oidc_provider_issuer_url = lookup(var.cluster_autoscaler, "oidc_provider_issuer_url", "")
-  oidc_provider_arn        = lookup(var.cluster_autoscaler, "oidc_provider_arn", "")
-}
+#   tags                     = var.tags
+#   enable                   = lookup(var.cluster_autoscaler, "enable", "false")
+#   cluster_name             = lookup(var.cluster_autoscaler, "cluster_name", "")
+#   asg_tags                 = lookup(var.cluster_autoscaler, "asg_tags", {})
+#   chart_version            = lookup(var.cluster_autoscaler, "chart_version", "7.0.0")
+#   oidc_provider_issuer_url = lookup(var.cluster_autoscaler, "oidc_provider_issuer_url", "")
+#   oidc_provider_arn        = lookup(var.cluster_autoscaler, "oidc_provider_arn", "")
+# }
 
+# Missing
 # module "external_dns" {
 #   source       = "./modules/external-dns"
 #   external_dns = var.external_dns

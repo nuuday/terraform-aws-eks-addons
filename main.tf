@@ -81,7 +81,7 @@ module "metrics_server" {
   source = "./modules/metrics-server"
 
   enable        = lookup(var.metrics_server, "enable", "false")
-  chart_version = lookup(var.metrics_server, "chart_version", "11.3.0")
+  chart_version = lookup(var.metrics_server, "chart_version", "2.11.1")
   namespace     = lookup(var.metrics_server, "namespace", "kube-system")
 }
 

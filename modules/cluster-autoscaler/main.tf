@@ -4,7 +4,7 @@ data "aws_region" "current" {
 
 data "aws_eks_cluster" "this" {
   count = var.enable ? 1 : 0
-  name = var.cluster_name
+  name  = var.cluster_name
 }
 
 locals {
@@ -15,11 +15,12 @@ locals {
   repository      = "https://kubernetes-charts.storage.googleapis.com"
   service_account = "aws-cluster-autoscaler"
   provider_url    = replace(var.oidc_provider_issuer_url, "https://", "")
+  cluster_name    = element(concat(data.aws_eks_cluster.this.*.id, list("")), 0)
 
   # Use supplied tags if provided, otherwise use defaults.
   asg_tags = length(var.asg_tags) > 0 ? var.tags : {
-    "k8s.io/cluster-autoscaler/${data.aws_eks_cluster.this[0].id}" = "owned"
-    "k8s.io/cluster-autoscaler/enabled"             = "true"
+    "k8s.io/cluster-autoscaler/${local.cluster_name}" = "owned"
+    "k8s.io/cluster-autoscaler/enabled"               = "true"
   }
 }
 
@@ -27,7 +28,7 @@ module "iam" {
   source = "github.com/terraform-aws-modules/terraform-aws-iam//modules/iam-assumable-role-with-oidc?ref=v2.10.0"
 
   create_role                   = var.enable
-  role_name                     = "${data.aws_eks_cluster.this[0].id}-cluster-autoscaler-irsa"
+  role_name                     = "${local.cluster_name}-cluster-autoscaler-irsa"
   provider_url                  = local.provider_url
   oidc_fully_qualified_subjects = ["system:serviceaccount:${local.namespace}:${local.service_account}"]
 

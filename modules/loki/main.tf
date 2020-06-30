@@ -13,7 +13,7 @@ locals {
   namespace           = var.namespace
   repository          = "https://grafana.github.io/loki/charts"
   provider_url        = replace(var.oidc_provider_issuer_url, "https://", "")
-  bucket_prefix       = "loki_"
+  bucket_prefix       = "loki-"
   bucket_name         = module.s3_bucket.this_s3_bucket_id
   dynamodb_table      = local.bucket_name
   role_name           = local.bucket_name

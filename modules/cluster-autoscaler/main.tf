@@ -126,7 +126,7 @@ resource "helm_release" "cluster_autoscaler" {
 
   set {
     name  = "autoDiscovery.clusterName"
-    value = data.aws_eks_cluster.this[0].id
+    value = local.cluster_name
   }
 
   set {

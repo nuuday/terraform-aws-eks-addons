@@ -24,7 +24,6 @@ variable "enable" {
 variable "oidc_provider_issuer_url" {
   description = "Issuer used in the OIDC provider associated with the EKS cluster to support IRSA."
   type        = string
-  default     = ""
 }
 
 variable "tags" {

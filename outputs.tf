@@ -14,9 +14,9 @@ output "cilium" {
   value = module.cilium
 }
 
-output "cluster_autoscaler" {
-  value = module.cluster_autoscaler
-}
+# output "cluster_autoscaler" {
+#   value = module.cluster_autoscaler
+# }
 
 # output "external_dns" {
 #   value = module.external_dns

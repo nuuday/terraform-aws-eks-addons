@@ -23,12 +23,13 @@ module "aws_node_termination_handler" {
   namespace     = lookup(var.aws_node_termination_handler, "namespace", "kube-system")
 }
 
-#Missing
+# Missing.
 # module "cert_manager" {
 #   source       = "./modules/cert-manager"
 #   cert_manager = var.cert_manager
 # }
 
+# Bug: Cilium is not cleaning up all pods when removed from main module.
 module "cilium" {
   source = "./modules/cilium"
 
@@ -39,7 +40,7 @@ module "cilium" {
   cluster_id    = lookup(var.cilium, "cluster_id", 1)
 }
 
-# Broken: Outputs tags when not applied
+# Broken: Outputs tags when not applied.
 # module "cluster_autoscaler" {
 #   source = "./modules/cluster-autoscaler"
 
@@ -52,7 +53,7 @@ module "cilium" {
 #   oidc_provider_arn        = lookup(var.cluster_autoscaler, "oidc_provider_arn", "")
 # }
 
-# Missing
+# Missing.
 # module "external_dns" {
 #   source       = "./modules/external-dns"
 #   external_dns = var.external_dns
@@ -70,6 +71,7 @@ module "kube_monkey" {
   timezone   = lookup(var.kube_monkey, "timezone", "Europe/Copenhagen")
 }
 
+# Bug: When removed from main.tf, one pod stays in Terminating state.
 module "loki" {
   source = "./modules/loki"
 

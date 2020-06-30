@@ -1,14 +1,24 @@
+data "aws_caller_identity" "loki" {
+  count = var.enable ? 1 : 0
+}
+
+data "aws_region" "loki" {
+  count = var.enable ? 1 : 0
+}
+
 locals {
-  chart_name     = "loki-stack"
-  chart_version  = var.chart_version
-  release_name   = "loki"
-  namespace      = var.namespace
-  repository     = "https://grafana.github.io/loki/charts"
-  provider_url   = replace(var.oidc_provider_issuer_url, "https://", "")
-  bucket_prefix  = "loki_"
-  bucket_name    = module.s3_bucket.this_s3_bucket_id
-  dynamodb_table = local.bucket_name
-  role_name      = local.bucket_name
+  chart_name          = "loki-stack"
+  chart_version       = var.chart_version
+  release_name        = "loki"
+  namespace           = var.namespace
+  repository          = "https://grafana.github.io/loki/charts"
+  provider_url        = replace(var.oidc_provider_issuer_url, "https://", "")
+  bucket_prefix       = "loki_"
+  bucket_name         = module.s3_bucket.this_s3_bucket_id
+  dynamodb_table      = local.bucket_name
+  role_name           = local.bucket_name
+  aws_caller_identity = element(concat(data.aws_caller_identity.loki.*.account_id, list("")), 0)
+  aws_region          = element(concat(data.aws_region.loki.*.name, list("")), 0)
 
   loki_values = {
     promtail = {
@@ -88,14 +98,6 @@ locals {
   }
 }
 
-data aws_caller_identity "loki" {
-  count = var.enable ? 1 : 0
-}
-
-data aws_region "loki" {
-  count = var.enable ? 1 : 0
-}
-
 data "aws_iam_policy_document" "loki" {
   count = var.enable ? 1 : 0
 
@@ -131,7 +133,7 @@ data "aws_iam_policy_document" "loki" {
       "dynamodb:DeleteTable"
     ]
 
-    resources = ["arn:aws:dynamodb:${data.aws_region.loki[0].name}:${data.aws_caller_identity.loki[0].account_id}:table/${local.dynamodb_table}*"]
+    resources = ["arn:aws:dynamodb:${data.aws_region.loki[0].name}:${local.aws_caller_identity}:table/${local.dynamodb_table}*"]
   }
 
   statement {

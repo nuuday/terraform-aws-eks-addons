@@ -74,14 +74,15 @@ module "loki" {
   enable        = lookup(var.loki, "enable", "false")
   chart_version = lookup(var.loki, "chart_version", "0.37.3")
   namespace     = lookup(var.loki, "namespace", "kube-system")
+  oidc_provider_issuer_url     = lookup(var.loki, "oidc_provider_issuer_url", null)
 }
 
 module "metrics_server" {
   source = "./modules/metrics-server"
 
-  enable        = lookup(var.loki, "enable", "false")
-  chart_version = lookup(var.loki, "chart_version", "11.3.0")
-  namespace     = lookup(var.loki, "namespace", "kube-system")
+  enable        = lookup(var.metrics_server, "enable", "false")
+  chart_version = lookup(var.metrics_server, "chart_version", "11.3.0")
+  namespace     = lookup(var.metrics_server, "namespace", "kube-system")
 }
 
 module "prometheus" {

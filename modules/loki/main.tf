@@ -12,11 +12,11 @@ locals {
   release_name        = "loki"
   namespace           = var.namespace
   repository          = "https://grafana.github.io/loki/charts"
-  provider_url        = replace(var.oidc_provider_issuer_url, "https://", "")
   bucket_prefix       = "loki-"
   bucket_name         = module.s3_bucket.this_s3_bucket_id
   dynamodb_table      = local.bucket_name
   role_name           = local.bucket_name
+  provider_url        = replace(coalesce(var.oidc_provider_issuer_url, " "), "https://", "")
   aws_caller_identity = element(concat(data.aws_caller_identity.loki.*.account_id, list("")), 0)
   aws_region          = element(concat(data.aws_region.loki.*.name, list("")), 0)
 
@@ -67,7 +67,7 @@ locals {
           aws = {
             s3 = "s3://${module.s3_bucket.this_s3_bucket_region}/${module.s3_bucket.this_s3_bucket_id}"
             dynamodb = {
-              dynamodb_url = "dynamodb://${data.aws_region.loki[0].name}"
+              dynamodb_url = "dynamodb://${local.aws_region}"
               metrics = {
                 url : "http://prometheus-server.kube-system.svc.cluster.local:9090"
               }
@@ -133,7 +133,7 @@ data "aws_iam_policy_document" "loki" {
       "dynamodb:DeleteTable"
     ]
 
-    resources = ["arn:aws:dynamodb:${data.aws_region.loki[0].name}:${local.aws_caller_identity}:table/${local.dynamodb_table}*"]
+    resources = ["arn:aws:dynamodb:${local.aws_region}:${local.aws_caller_identity}:table/${local.dynamodb_table}*"]
   }
 
   statement {
@@ -180,7 +180,6 @@ module "iam" {
 
   tags = var.tags
 }
-
 
 module "s3_bucket" {
   source        = "terraform-aws-modules/s3-bucket/aws"

@@ -1,7 +1,7 @@
 variable "chart_version" {
-  default = "1.36.2"
+  default     = "1.36.2"
   description = "NGINX ingress controller version."
-  type = string
+  type        = string
 }
 
 variable "enable" {
@@ -30,6 +30,6 @@ variable "ingress_controller_https" {
 
 # TODO: Add description
 variable "common_tags" {
-  type = map
+  type    = map
   default = {}
 }

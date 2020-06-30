@@ -75,11 +75,11 @@ module "kube_monkey" {
 module "loki" {
   source = "./modules/loki"
 
-  cluster_name  = lookup(var.loki, "cluster_name", "")
-  enable        = lookup(var.loki, "enable", "false")
-  chart_version = lookup(var.loki, "chart_version", "0.37.3")
-  namespace     = lookup(var.loki, "namespace", "kube-system")
-  oidc_provider_issuer_url     = lookup(var.loki, "oidc_provider_issuer_url", null)
+  cluster_name             = lookup(var.loki, "cluster_name", "")
+  enable                   = lookup(var.loki, "enable", "false")
+  chart_version            = lookup(var.loki, "chart_version", "0.37.3")
+  namespace                = lookup(var.loki, "namespace", "kube-system")
+  oidc_provider_issuer_url = lookup(var.loki, "oidc_provider_issuer_url", null)
 }
 
 module "metrics_server" {
@@ -88,6 +88,18 @@ module "metrics_server" {
   enable        = lookup(var.metrics_server, "enable", "false")
   chart_version = lookup(var.metrics_server, "chart_version", "2.11.1")
   namespace     = lookup(var.metrics_server, "namespace", "kube-system")
+}
+
+module "prometheus" {
+  source = "./modules/nginx-ingress-controller"
+
+  enable                   = lookup(var.prometheus, "enable", "false")
+  chart_version            = lookup(var.prometheus, "chart_version", "1.36.2")
+  namespace                = lookup(var.prometheus, "namespace", "kube-system")
+  lb_public_dns            = lookup(var.prometheus, "lb_public_dns", null)
+  ingress_controller_http  = lookup(var.prometheus, "ingress_controller_http", null)
+  ingress_controller_https = lookup(var.prometheus, "ingress_controller_https", null)
+  common_tags              = lookup(var.prometheus, "common_tags", {})
 }
 
 module "prometheus" {

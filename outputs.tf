@@ -34,6 +34,10 @@ output "metrics_server" {
   value = module.metrics_server
 }
 
+output "nginx_ingress_controller" {
+  value = module.nginx_ingress_controller
+}
+
 output "prometheus" {
   value = module.prometheus
 }

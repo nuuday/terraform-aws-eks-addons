@@ -93,13 +93,12 @@ module "metrics_server" {
 module "nginx_ingress_controller" {
   source = "./modules/nginx-ingress-controller"
 
-  enable                   = lookup(var.prometheus, "enable", "false")
-  chart_version            = lookup(var.prometheus, "chart_version", "1.36.2")
-  namespace                = lookup(var.prometheus, "namespace", "kube-system")
-  lb_public_dns            = lookup(var.prometheus, "lb_public_dns", null)
-  ingress_controller_http  = lookup(var.prometheus, "ingress_controller_http", null)
-  ingress_controller_https = lookup(var.prometheus, "ingress_controller_https", null)
-  common_tags              = lookup(var.prometheus, "common_tags", {})
+  enable                             = lookup(var.nginx_ingress_controller, "enable", "false")
+  chart_version                      = lookup(var.nginx_ingress_controller, "chart_version", "1.36.2")
+  namespace                          = lookup(var.nginx_ingress_controller, "namespace", "kube-system")
+  lb_fqdn                            = lookup(var.nginx_ingress_controller, "lb_fqdn", null)
+  controller_service_nodeports_http  = lookup(var.nginx_ingress_controller, "controller_service_nodeports_http", "32080")
+  controller_service_nodeports_https = lookup(var.nginx_ingress_controller, "controller_service_nodeports_https", "32443")
 }
 
 module "prometheus" {

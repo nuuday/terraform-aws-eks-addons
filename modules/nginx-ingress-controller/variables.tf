@@ -1,35 +1,29 @@
-variable "chart_version" {
-  default     = "1.36.2"
-  description = "NGINX ingress controller version."
-  type        = string
+variable "enable" {
+  description = "Whether to actually deploy the nginx-ingress-controller."
+  default = true
 }
 
-variable "enable" {
-  default     = true
-  description = "Enable or Disable NGINX ingress controller."
-  type        = bool
+variable "chart_version" {
+  description = "Version of the nginx-ingress-controller chart to deploy"
+  default     = "1.36.2"
 }
 
 variable "namespace" {
+  description = "Namespace to deploy the nginx-ingress-controller to"
   default     = "kube-system"
-  description = "Namespace to deploy NGINX ingress controller in."
+}
+
+variable "lb_fqdn" {
   type        = string
+  description = "The FQDN address to set as the load-balancer status of Ingress"
 }
 
-# TODO: Add description and possibly change name
-variable "lb_public_dns" {
+variable "controller_service_nodeports_http" {
+  description = "List of http ports that map Ingress's ports 80 to be open for service"
+  default     = "32080"
 }
 
-# TODO: Add description and possibly change name
-variable "ingress_controller_http" {
-}
-
-# TODO: Add description and possibly change name
-variable "ingress_controller_https" {
-}
-
-# TODO: Add description
-variable "common_tags" {
-  type    = map
-  default = {}
+variable "controller_service_nodeports_https" {
+  description = "List of https ports that map Ingress's ports 443 to be open for service"
+  default     = "32443"
 }

@@ -6,7 +6,6 @@ resource "helm_release" "nginx_ingress" {
   repository       = "https://kubernetes-charts.storage.googleapis.com"
   version          = var.chart_version
   namespace        = var.namespace
-  create_namespace = true
   wait             = true
 
   set {

@@ -90,7 +90,7 @@ module "metrics_server" {
   namespace     = lookup(var.metrics_server, "namespace", "kube-system")
 }
 
-module "prometheus" {
+module "nginx_ingress_controller" {
   source = "./modules/nginx-ingress-controller"
 
   enable                   = lookup(var.prometheus, "enable", "false")

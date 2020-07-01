@@ -2,19 +2,6 @@ terraform {
   required_version = "> 0.12.0"
 }
 
-provider "kubernetes" {
-  host                   = var.eks_endpoint
-  cluster_ca_certificate = var.eks_cluster_ca_certificate
-  token                  = var.eks_token
-  load_config_file       = false
-  version                = "~> 1.9"
-}
-
-provider "aws" {
-  version = "~> 2.0"
-  region  = "eu-central-1"
-}
-
 module "aws_node_termination_handler" {
   source = "./modules/aws-node-termination-handler"
 

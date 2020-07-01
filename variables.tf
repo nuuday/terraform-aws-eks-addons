@@ -1,18 +1,3 @@
-variable "eks_endpoint" {
-  type        = string
-  description = "The hostname (in form of URI) of Kubernetes master. Can be sourced from the aws_eks_cluster data block: data.aws_eks_cluster.cluster.endpoint"
-}
-
-variable "eks_cluster_ca_certificate" {
-  type        = string
-  description = "PEM-encoded root certificates bundle for TLS authentication. Can be sourced from the aws_eks_cluster data block: base64decode(data.aws_eks_cluster.cluster.certificate_authority.0.data)"
-}
-
-variable "eks_token" {
-  type        = string
-  description = "Token of your service account. Can be sourced from the aws_eks_cluster_auth data block: data.aws_eks_cluster_auth.cluster.token"
-}
-
 variable "tags" {
   default     = {}
   type        = map(string)

@@ -59,7 +59,7 @@ variable "metrics_server" {
   default = {}
 }
 
-variable "nginx-ingress-controller" {
+variable "nginx_ingress_controller" {
   type    = any
   default = {}
 }

@@ -15,10 +15,10 @@ resource "helm_release" "nginx_ingress" {
 
   name    = "nginx-ingress-internal"
   chart   = "nginx-ingress"
-  version = var.nginx_ingress_chart_version
+  version = var.chart_version
 
   repository       = "https://kubernetes-charts.storage.googleapis.com"
-  namespace        = var.kubernetes_namespace
+  namespace        = var.namespace
   create_namespace = true
   wait             = true
 

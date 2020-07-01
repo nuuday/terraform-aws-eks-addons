@@ -59,6 +59,11 @@ variable "metrics_server" {
   default = {}
 }
 
+variable "nginx-ingress-controller" {
+  type    = any
+  default = {}
+}
+
 variable "prometheus" {
   type    = any
   default = {}

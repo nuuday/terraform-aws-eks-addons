@@ -13,8 +13,10 @@ module "addons" {
   # add '?ref=v0.1.0' to pin versions
   source = "github.com/nuuday/terraform-aws-eks-addons"
 
-  cluster_autoscaler_enable = true
-  # ...
+  cluster_autoscaler = {
+    enable = true
+    # ...
+  }
 }
 ```
 

@@ -1,7 +1,7 @@
 resource "helm_release" "nginx_ingress" {
   count = var.enable == true ? 1 : 0
 
-  name             = "nginx-ingress-internal"
+  name             = "nginx-ingress"
   chart            = "nginx-ingress"
   repository       = "https://kubernetes-charts.storage.googleapis.com"
   version          = var.chart_version

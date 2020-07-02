@@ -21,6 +21,7 @@ variable "lb_fqdn" {
 variable "enable" {
   type    = bool
   default = true
+
 }
 
 

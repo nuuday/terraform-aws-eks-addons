@@ -1,6 +1,6 @@
 variable "chart_version" {
   default     = "0.7.5"
-  description = "AWS Node Termination handler version"
+  description = "AWS Node Termination handler version."
   type        = string
 }
 

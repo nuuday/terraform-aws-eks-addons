@@ -5,10 +5,6 @@
 # Theses variabels are expected to be passed in by the operator when caling this module
 #-------------------------------------------------------------------------------
 
-variable "cluster_name" {
-  description = "the eks-clusrter name to install the ingress cotroller in"
-  type        = string
-}
 
 variable "lb_fqdn" {
   description = "the FQDN address to set as the load-balancer status of Ingress"

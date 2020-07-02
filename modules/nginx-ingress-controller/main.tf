@@ -1,15 +1,5 @@
 
 
-# Add Kubernetes Stable Helm charts repo
-# https://github.com/helm/charts/tree/master/stable/nginx-ingress
-
-resource "null_resource" "update_helm_repo" {
-  provisioner "local-exec" {
-    command = "helm repo update"
-  }
-}
-
-
 resource "helm_release" "nginx_ingress" {
   count = var.enable == true ? 1 : 0
 
@@ -60,9 +50,6 @@ resource "helm_release" "nginx_ingress" {
     value = "linux"
   }
 
-  depends_on = [
-    null_resource.update_helm_repo
-  ]
 
 }
 

@@ -5,13 +5,13 @@ locals {
   release_name  = "external-dns"
   namespace     = var.namespace
   repository    = "https://charts.bitnami.com/bitnami"
-  provider_url = replace(var.oidc_provider_issuer_url, "https://", "")
+  provider_url  = replace(var.oidc_provider_issuer_url, "https://", "")
 
   values = {
     provider = "aws"
     aws = {
       zoneType = var.zone_type
-      region = data.aws_region.external_dns.name
+      region   = data.aws_region.external_dns.name
     }
     domainFilters = var.route53_zones
     nodeSelector = {
@@ -48,7 +48,7 @@ module "iam" {
 
 data "aws_route53_zone" "cert_manager" {
   count = length(var.route53_zones)
-  name = var.route53_zones[count.index]
+  name  = var.route53_zones[count.index]
 }
 
 
@@ -65,8 +65,8 @@ data "aws_iam_policy_document" "cert_manager" {
       "route53:ListResourceRecordSets"
     ]
     resources = [
-    for zone in data.aws_route53_zone.cert_manager:
-    "arn:aws:route53:::hostedzone/${zone.zone_id}"
+      for zone in data.aws_route53_zone.cert_manager :
+      "arn:aws:route53:::hostedzone/${zone.zone_id}"
     ]
   }
   statement {

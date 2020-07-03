@@ -1,3 +1,11 @@
+resource "kubernetes_namespace" "this" {
+  count = var.create_namespace == true ? 1 : 0
+  
+  metadata {
+    name = var.namespace
+  }
+}
+
 resource "helm_release" "nginx_ingress" {
   count = var.enable == true ? 1 : 0
 
@@ -45,4 +53,8 @@ resource "helm_release" "nginx_ingress" {
     name  = "defaultBackend.nodeSelector.kubernetes\\.io/os"
     value = "linux"
   }
+
+  depends_on = [
+    kubernetes_namespace.this,
+  ]
 }

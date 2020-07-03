@@ -1,5 +1,5 @@
 variable "enable" {
-  description = "Whether to actually deploy the nginx-ingress-controller."
+  description = "Whether to actually deploy the nginx-ingress-controller"
   default     = true
 }
 
@@ -11,6 +11,11 @@ variable "chart_version" {
 variable "namespace" {
   description = "Namespace to deploy the nginx-ingress-controller to"
   default     = "kube-system"
+}
+
+variable "create_namespace" {
+  description = "Whether to create the namespace defined in the namespace variable. Will fail if the namespace already exists"
+  default     = false
 }
 
 variable "lb_fqdn" {

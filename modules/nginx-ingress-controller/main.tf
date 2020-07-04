@@ -39,4 +39,6 @@ resource "helm_release" "nginx_ingress" {
   namespace        = local.namespace
   create_namespace = true
   wait             = true
+  values           = [yamlencode(local.values)]
+
 }

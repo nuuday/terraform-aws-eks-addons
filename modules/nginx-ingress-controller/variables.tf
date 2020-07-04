@@ -13,22 +13,18 @@ variable "namespace" {
   default     = "kube-system"
 }
 
-variable "create_namespace" {
-  description = "Whether to create the namespace defined in the namespace variable. Will fail if the namespace already exists"
-  default     = false
-}
-
-variable "lb_fqdn" {
+variable "loadbalancer_fqdn" {
   type        = string
   description = "The FQDN address to set as the load-balancer status of Ingress"
 }
 
-variable "controller_service_nodeports_http" {
-  description = "List of http ports that map Ingress's ports 80 to be open for service"
-  default     = "32080"
-}
-
-variable "controller_service_nodeports_https" {
-  description = "List of https ports that map Ingress's ports 443 to be open for service"
-  default     = "32443"
+variable "controller_service_node_ports" {
+  type = list(object({
+    name = string
+    port = number
+  }))
+  default = [
+    { name = "http", port = 32080 },
+    { name = "https", port = 32443 }
+  ]
 }

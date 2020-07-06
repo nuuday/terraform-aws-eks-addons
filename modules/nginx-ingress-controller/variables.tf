@@ -20,11 +20,13 @@ variable "loadbalancer_fqdn" {
 
 variable "controller_service_node_ports" {
   type = list(object({
-    name = string
-    port = number
+    name     = string
+    port     = number
+    nodePort = number
+    protocol = string
   }))
   default = [
-    { name = "http", port = 32080 },
-    { name = "https", port = 32443 }
+    { name = "http", nodePort = 32080, port = 80, protocol = "tcp" },
+    { name = "https", nodePort = 32443, port = 443, protocol = "tcp" }
   ]
 }

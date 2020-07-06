@@ -2,12 +2,8 @@ name: Linting
 
 on:
   pull_request:
-    branches:
-    - master
-
-  push:
-    branches:
-    - master
+    paths:
+      - '**'
 
 jobs:
   terraform:

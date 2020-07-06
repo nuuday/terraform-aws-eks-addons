@@ -7,8 +7,8 @@ project adheres to [Semantic Versioning](http://semver.org/).
 
 {{ if .Versions -}}
 <a name="unreleased"></a>
-## [Unreleased]
 {{ if .Unreleased.CommitGroups -}}
+## [Unreleased]
 {{ range .Unreleased.CommitGroups -}}
 **{{ .Title }}**
 {{ range .Commits -}}

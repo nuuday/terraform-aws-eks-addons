@@ -10,7 +10,7 @@ locals {
   provider_url    = replace(var.oidc_provider_issuer_url, "https://", "")
 
   # Use supplied tags if provided, otherwise use defaults.
-  asg_tags = length(var.asg_tags) > 0 ? var.tags : {
+  asg_tags = length(var.asg_tags) > 0 ? var.asg_tags : {
     "k8s.io/cluster-autoscaler/${var.cluster_name}" = "owned"
     "k8s.io/cluster-autoscaler/enabled"             = "true"
   }

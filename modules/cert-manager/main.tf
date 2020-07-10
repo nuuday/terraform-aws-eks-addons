@@ -6,6 +6,29 @@ locals {
   provider_url = replace(var.oidc_provider_issuer_url, "https://", "")
 
   values = {
+    resources = {
+      requests = {
+        cpu    = "10m"
+        memory = "32Mi"
+      }
+    }
+    webhook = {
+      resources = {
+        requests = {
+          cpu    = "10m"
+          memory = "32Mi"
+        }
+      }
+    }
+    cainjector = {
+      resources = {
+        requests = {
+          cpu    = "10m"
+          memory = "32Mi"
+        }
+      }
+    }
+
     serviceAccount = {
       annotations = {
         "eks.amazonaws.com/role-arn" = module.iam.this_iam_role_arn

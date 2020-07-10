@@ -31,11 +31,25 @@ variable "retention" {
   description = "Retention period"
 }
 
-
 variable "alertmanager_enable" {
   default     = true
   description = "Enable or disable alert manager"
   type        = bool
+}
+
+variable "alertmanager_alerts" {
+  default     = []
+  description = "Extra alert manager groups, see https://prometheus.io/docs/prometheus/latest/configuration/alerting_rules/ for syntax"
+  type        = list(object({
+    name = string
+    rules = list(object({
+      alert = string
+      annotations = map(string)
+      expr = string
+      for = string
+      labels = map(string)
+    }))
+  }))
 }
 
 variable "pushgateway_enable" {

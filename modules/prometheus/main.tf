@@ -56,13 +56,20 @@ locals {
       }
     }
     serverFiles = {
-      "alerting_rules.yml"  = yamldecode(file("${path.module}/files/prometheus/prometheus_alerts.yaml"))
+      "alerting_rules.yml"  = local.alerting_rules
       "recording_rules.yml" = yamldecode(file("${path.module}/files/prometheus/prometheus_rules.yaml"))
     }
   }
-
+  alerting_rules = {
+    groups = concat(yamldecode(file("${path.module}/files/prometheus/prometheus_alerts.yaml")).groups, var.alertmanager_alerts)
+  }
   prometheus_values = concat([yamlencode(local.prometheus_default_values)], var.prometheus_config)
 
+}
+
+resource "local_file" "test" {
+  filename = "alert_rules.yaml"
+  content = yamlencode(local.alerting_rules)
 }
 
 resource "helm_release" "prometheus" {

@@ -2,7 +2,6 @@ locals {
   chart_name    = "port-tester"
   chart_version = var.chart_version
   release_name  = "port-tester"
-  namespace     = var.namespace
   repository    = "https://harbor.aws.c.dk/chartrepo/shared-platforms"
 }
 
@@ -12,5 +11,4 @@ resource "helm_release" "port-tester" {
   chart      = local.chart_name
   version    = local.chart_version
   repository = local.repository
-  namespace  = local.namespace
 }

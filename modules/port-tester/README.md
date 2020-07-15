@@ -1,8 +1,13 @@
 # Port testing Addon
-Very simple go webserver that executes a HTTP GET against a
+Very simple go webserver that executes an HTTP GET against a
 provided endpoint and tests for an expected returned status code
 
 This application doesn't do any testing itself, it will only execute
-what you want it to. An expect use is to config a dashboard like grafana
-to, on a schedule, hit an endpoint and check the response. Populate the
-influx with the result and display the data on the dashboard.
+what you want it to. An expected use is to config a dashboard like grafana
+to poll endpoints and check the response.
+
+## Example
+
+```shell script
+curl "http://HOST/?endpoint=https://rancher.lqd.dk&expectedStatusCode=200"
+```

@@ -11,15 +11,15 @@ resource "kubernetes_namespace" "this" {
 }
 
 locals {
-  chart_name    = "port-tester"
-  chart_version = var.chart_version
-  release_name  = "port-tester"
-  repository    = "https://harbor.aws.c.dk/chartrepo/shared-platforms"
+  chart_name       = "port-tester"
+  chart_version    = var.chart_version
+  release_name     = "port-tester"
+  repository       = "https://harbor.aws.c.dk/chartrepo/shared-platforms"
   create_namespace = true
 
   values = {
     namespace = var.namespace
-    name = "port-tester"
+    name      = "port-tester"
   }
 }
 

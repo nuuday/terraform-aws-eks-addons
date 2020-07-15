@@ -14,3 +14,8 @@ variable "enable" {
   description = "Enable or Disable port-testing"
   type        = bool
 }
+
+variable "create_namespace" {
+  description = "Whether to create the namespace defined in the namespace variable. Will fail if the namespace already exists"
+  default     = false
+}

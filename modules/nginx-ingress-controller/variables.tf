@@ -30,3 +30,8 @@ variable "controller_service_node_ports" {
     { name = "https", nodePort = 32443, port = 443, protocol = "tcp" }
   ]
 }
+
+variable "create_namespace" {
+  description = "Whether to create the namespace defined in the namespace variable. Will fail if the namespace already exists"
+  default     = false
+}

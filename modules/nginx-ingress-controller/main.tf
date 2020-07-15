@@ -81,6 +81,18 @@ locals {
   }
 }
 
+resource "kubernetes_namespace" "this" {
+  count = var.create_namespace == true ? 1 : 0
+
+  metadata {
+    name = var.namespace
+
+    annotations = {
+      managedby = "terraform"
+    }
+  }
+}
+
 resource "helm_release" "nginx_ingress" {
   count            = var.enable ? 1 : 0
   name             = local.release_name
@@ -88,7 +100,7 @@ resource "helm_release" "nginx_ingress" {
   version          = local.chart_version
   repository       = local.repository
   namespace        = local.namespace
-  create_namespace = true
+  create_namespace = false
   wait             = true
   values           = [yamlencode(local.values)]
 }

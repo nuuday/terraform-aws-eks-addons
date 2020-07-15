@@ -40,14 +40,14 @@ variable "alertmanager_enable" {
 variable "alertmanager_alerts" {
   default     = []
   description = "Extra alert manager groups, see https://prometheus.io/docs/prometheus/latest/configuration/alerting_rules/ for syntax"
-  type        = list(object({
+  type = list(object({
     name = string
     rules = list(object({
-      alert = string
+      alert       = string
       annotations = map(string)
-      expr = string
-      for = string
-      labels = map(string)
+      expr        = string
+      for         = string
+      labels      = map(string)
     }))
   }))
 }

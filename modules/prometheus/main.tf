@@ -69,7 +69,7 @@ locals {
 
 resource "local_file" "test" {
   filename = "alert_rules.yaml"
-  content = yamlencode(local.alerting_rules)
+  content  = yamlencode(local.alerting_rules)
 }
 
 resource "helm_release" "prometheus" {

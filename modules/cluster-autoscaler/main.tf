@@ -121,6 +121,11 @@ resource "helm_release" "cluster_autoscaler" {
   }
 
   set {
+    name  = "priorityClassName"
+    value = var.priority_class
+  }
+
+  set {
     name  = "autoDiscovery.enabled"
     value = true
   }

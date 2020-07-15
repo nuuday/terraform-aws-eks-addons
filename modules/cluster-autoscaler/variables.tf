@@ -41,3 +41,8 @@ variable "tags" {
   default     = {}
 }
 
+variable "priority_class" {
+  type        = string
+  default     = "system-cluster-critical"
+  description = "Change cluster autoscaler priority class"
+}

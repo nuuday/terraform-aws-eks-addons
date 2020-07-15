@@ -5,24 +5,30 @@ variable "enable" {
 }
 
 variable "route53_zones" {
-  type = list(string)
+  type        = list(string)
+  description = "List of Route53 zone names for external-dns to work with."
 }
 
 variable "chart_version" {
   default     = "3.2.3"
-  description = "external dns version to install"
+  description = "The version of external-dns to install."
   type        = string
+}
+
+variable "create_namespace" {
+  description = "Whether to create the namespace defined in the namespace variable. Will fail if the namespace already exists."
+  default     = false
 }
 
 variable "namespace" {
   default     = "kube-system"
-  description = "Kubernetes namespace to deploy to"
+  description = "Kubernetes namespace to deploy external-dns to."
   type        = string
 }
 
 variable "zone_type" {
   default     = "public"
-  description = "dns zone type, can be private or public"
+  description = "DNS zone type, can be private or public."
 }
 
 variable "oidc_provider_issuer_url" {

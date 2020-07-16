@@ -12,7 +12,7 @@ locals {
       zoneType = var.zone_type
       region   = data.aws_region.external_dns.name
     }
-    domainFilters = var.route53_zones
+    zoneIdFilters = var.route53_zone_ids
     nodeSelector = {
       "kubernetes.io/os" = "linux"
     }
@@ -45,11 +45,6 @@ module "iam" {
   tags                          = var.tags
 }
 
-data "aws_route53_zone" "cert_manager" {
-  count = length(var.route53_zones)
-  name  = var.route53_zones[count.index]
-}
-
 data "aws_iam_policy_document" "cert_manager" {
   statement {
     actions = [
@@ -63,8 +58,8 @@ data "aws_iam_policy_document" "cert_manager" {
       "route53:ListResourceRecordSets"
     ]
     resources = [
-      for zone in data.aws_route53_zone.cert_manager :
-      "arn:aws:route53:::hostedzone/${zone.zone_id}"
+      for id in var.route53_zone_ids :
+      "arn:aws:route53:::hostedzone/${id}"
     ]
   }
   statement {
@@ -77,7 +72,7 @@ data "aws_iam_policy_document" "cert_manager" {
 }
 
 resource "aws_iam_role_policy" "cert_manager" {
-  count  = var.enable && length(var.route53_zones) > 0 ? 1 : 0
+  count  = var.enable && length(var.route53_zone_ids) > 0 ? 1 : 0
   name   = "cert-manager-${random_id.external_dns.hex}"
   role   = module.iam.this_iam_role_name
   policy = data.aws_iam_policy_document.cert_manager.json

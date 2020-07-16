@@ -4,9 +4,9 @@ variable "enable" {
   type        = bool
 }
 
-variable "route53_zones" {
+variable "route53_zone_ids" {
   type        = list(string)
-  description = "List of Route53 zone names for external-dns to work with."
+  description = "List of Route53 zone IDs for external-dns to work with."
 }
 
 variable "chart_version" {

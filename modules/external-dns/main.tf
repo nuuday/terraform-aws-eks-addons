@@ -1,4 +1,3 @@
-
 locals {
   chart_name    = "external-dns"
   chart_version = var.chart_version
@@ -51,7 +50,6 @@ data "aws_route53_zone" "cert_manager" {
   name  = var.route53_zones[count.index]
 }
 
-
 data "aws_iam_policy_document" "cert_manager" {
   statement {
     actions = [
@@ -85,18 +83,26 @@ resource "aws_iam_role_policy" "cert_manager" {
   policy = data.aws_iam_policy_document.cert_manager.json
 }
 
-
-
 resource "helm_release" "external_dns" {
-  count            = var.enable ? 1 : 0
-  name             = local.release_name
-  chart            = local.chart_name
-  version          = local.chart_version
-  repository       = local.repository
-  namespace        = local.namespace
-  create_namespace = true
+  count      = var.enable ? 1 : 0
+  name       = local.release_name
+  chart      = local.chart_name
+  version    = local.chart_version
+  repository = local.repository
+  namespace  = local.namespace
 
   wait   = true
   values = [yamlencode(local.values)]
+}
 
+resource "kubernetes_namespace" "this" {
+  count = var.create_namespace == true ? 1 : 0
+
+  metadata {
+    name = var.namespace
+
+    annotations = {
+      managedby = "terraform"
+    }
+  }
 }

@@ -27,7 +27,7 @@ variable "ingress_class" {
   type = string
 }
 
-variable "kubeconfig_filename" {
+variable "kubectl_server" {
   type = string
 }
 

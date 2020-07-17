@@ -194,15 +194,14 @@ resource "null_resource" "aws_iam_cluster_issuer" {
 
   provisioner "local-exec" {
     command = <<EOF
-cat <<MOF | kubectl --token ${var.kubectl_token} apply -f -
+cat <<MOF | kubectl --token ${var.kubectl_token} \
+  --server ${var.kubectl_server} \
+    apply -f -
 ${yamlencode(local.manifest_cluster_issuer_staging)}
 MOF
 EOF
-
-    environment = {
-      KUBECONFIG = "${var.kubeconfig_filename}"
-    }
   }
+
   depends_on = [time_sleep.wait_30_seconds]
 }
 
@@ -216,15 +215,13 @@ resource "null_resource" "aws_iam_cluster_issuer_production" {
 
   provisioner "local-exec" {
     command = <<EOF
-cat <<MOF | kubectl --token ${var.kubectl_token} apply -f -
+cat <<MOF | kubectl --token ${var.kubectl_token} \
+  --server ${var.kubectl_server} \
+  apply -f -
 ${yamlencode(local.manifest_cluster_issuer_production)}
 MOF
 EOF
-
-    environment = {
-      KUBECONFIG = "${var.kubeconfig_filename}"
-    }
   }
-  depends_on = [time_sleep.wait_30_seconds]
 
+  depends_on = [time_sleep.wait_30_seconds]
 }

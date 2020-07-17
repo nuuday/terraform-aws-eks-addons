@@ -115,7 +115,7 @@ data "aws_region" "cert_manager" {
 }
 
 data "aws_route53_zone" "cert_manager" {
-  count = length(var.route53_zones)
+  count = length(var.route53_zones) > 0 ? length(var.route53_zones) : 0
   name  = var.route53_zones[count.index]
 }
 
@@ -128,7 +128,7 @@ resource "random_id" "cert_manager" {
 
 module "iam" {
   source                        = "terraform-aws-modules/iam/aws//modules/iam-assumable-role-with-oidc"
-  create_role                   = var.enable
+  create_role                   = var.enable && length(var.route53_zones) > 0
   role_name                     = "${local.release_name}-irsa-${random_id.cert_manager.hex}"
   provider_url                  = local.provider_url
   oidc_fully_qualified_subjects = ["system:serviceaccount:${local.namespace}:cert-manager"]
@@ -148,8 +148,8 @@ data "aws_iam_policy_document" "cert_manager" {
       "route53:ListResourceRecordSets"
     ]
     resources = [
-      for zone in data.aws_route53_zone.cert_manager :
-      "arn:aws:route53:::hostedzone/${zone.zone_id}"
+      for zone_id in data.aws_route53_zone.cert_manager.*.zone_id :
+      "arn:aws:route53:::hostedzone/${zone_id}"
     ]
   }
   statement {

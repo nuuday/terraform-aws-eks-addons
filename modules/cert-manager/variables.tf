@@ -21,7 +21,8 @@ variable "tags" {
 }
 
 variable "email" {
-  type = string
+  description = "If `install_clusterissuers = true`, then this e-mail address will be used for registering these with Let's Encrypt."
+  default     = ""
 }
 variable "ingress_class" {
   type = string

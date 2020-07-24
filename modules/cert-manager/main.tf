@@ -187,7 +187,8 @@ resource "time_sleep" "wait_30_seconds" {
 
 // TODO: This needs to be changed with Terraform 0.13 when new kubernetes provider is available
 resource "null_resource" "aws_iam_cluster_issuer" {
-  count = var.enable ? 1 : 0
+  count = var.enable && var.install_clusterissuers ? 1 : 0
+
   triggers = {
     always_run = "${timestamp()}"
   }
@@ -203,13 +204,14 @@ EOF
       KUBECONFIG = "${var.kubeconfig_filename}"
     }
   }
+
   depends_on = [time_sleep.wait_30_seconds]
 }
 
 // TODO: This needs to be changed with Terraform 0.13 when new kubernetes provider is available
 resource "null_resource" "aws_iam_cluster_issuer_production" {
+  count = var.enable && var.install_clusterissuers ? 1 : 0
 
-  count = var.enable ? 1 : 0
   triggers = {
     always_run = "${timestamp()}"
   }

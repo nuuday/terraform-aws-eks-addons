@@ -5,7 +5,6 @@ locals {
   namespace     = var.namespace
   repository    = "https://kubernetes-charts.storage.googleapis.com"
 
-
   http_ports = tomap({
     for listener in var.controller_service_node_ports :
     (listener.name) => listener
@@ -100,7 +99,7 @@ resource "helm_release" "nginx_ingress" {
   version          = local.chart_version
   repository       = local.repository
   namespace        = local.namespace
-  create_namespace = false
+  create_namespace = var.create_namespace
   wait             = true
   values           = [yamlencode(local.values)]
 }

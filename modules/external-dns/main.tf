@@ -6,13 +6,15 @@ locals {
   repository    = "https://charts.bitnami.com/bitnami"
   provider_url  = replace(var.oidc_provider_issuer_url, "https://", "")
 
+  route53_zone_ids = length(var.route53_zones) > 0 ? data.aws_route53_zone.cert_manager.*.id : var.route53_zone_ids
+
   values = {
     provider = "aws"
     aws = {
       zoneType = var.zone_type
       region   = data.aws_region.external_dns.name
     }
-    zoneIdFilters = var.route53_zone_ids
+    zoneIdFilters = local.route53_zone_ids
     nodeSelector = {
       "kubernetes.io/os" = "linux"
     }
@@ -28,6 +30,11 @@ locals {
 }
 
 data aws_region "external_dns" {}
+
+data "aws_route53_zone" "cert_manager" {
+  count = length(var.route53_zones)
+  name  = var.route53_zones[count.index]
+}
 
 resource "random_id" "external_dns" {
   keepers = {
@@ -58,7 +65,7 @@ data "aws_iam_policy_document" "cert_manager" {
       "route53:ListResourceRecordSets"
     ]
     resources = [
-      for id in var.route53_zone_ids :
+      for id in local.route53_zone_ids :
       "arn:aws:route53:::hostedzone/${id}"
     ]
   }
@@ -72,7 +79,7 @@ data "aws_iam_policy_document" "cert_manager" {
 }
 
 resource "aws_iam_role_policy" "cert_manager" {
-  count  = var.enable && length(var.route53_zone_ids) > 0 ? 1 : 0
+  count  = var.enable && length(local.route53_zone_ids) > 0 ? 1 : 0
   name   = "cert-manager-${random_id.external_dns.hex}"
   role   = module.iam.this_iam_role_name
   policy = data.aws_iam_policy_document.cert_manager.json

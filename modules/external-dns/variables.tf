@@ -6,7 +6,14 @@ variable "enable" {
 
 variable "route53_zones" {
   type        = list(string)
-  description = "List of Route53 zone names for external-dns to work with."
+  description = "List of Route53 zones for external-dns to work with. NOTE: This is mutually exclusive to 'route53_zone_ids'."
+  default     = []
+}
+
+variable "route53_zone_ids" {
+  type        = list(string)
+  description = "List of Route53 zone IDs for external-dns to work with. NOTE: This is mutually exclusive to 'route53_zones'."
+  default     = []
 }
 
 variable "chart_version" {

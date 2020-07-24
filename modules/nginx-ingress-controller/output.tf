@@ -29,3 +29,7 @@ output "prometheus_alert_manager_rules" {
     ]
   }]
 }
+
+output "ingress_class" {
+  value = local.values.controller.ingressClass
+}

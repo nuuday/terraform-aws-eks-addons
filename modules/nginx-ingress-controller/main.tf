@@ -10,18 +10,23 @@ locals {
     (listener.name) => listener
     if lower(listener.protocol) == "tcp" && contains([80, 443], listener.port)
   })
+
   enable_https = contains(keys(local.http_ports), "https")
   enable_http  = contains(keys(local.http_ports), "http")
 
   values = {
     controller = {
+      ingressClass = "nginx"
+
       podAnnotations = {
         "prometheus.io/scrape" : "true"
         "prometheus.io/port" : "10254"
       }
+
       metrics = {
         enabled = true
         port : 10254
+
         service = {
           annotations = {
             "prometheus.io/scrape" : "true"
@@ -29,18 +34,22 @@ locals {
           }
         }
       }
+
       autoscaling = {
         enabled = true
       }
+
       resources = {
         limits = {
           memory = "128Mi"
         }
+
         requests = {
           cpu    = "100m"
           memory = "64Mi"
         }
       }
+
       service = {
         type = "NodePort"
 
@@ -60,18 +69,22 @@ locals {
           }
         }
       }
+
       extraArgs = {
         "publish-status-address" = var.loadbalancer_fqdn
       }
+
       nodeSelector = {
         "kubernetes.io/os" = "linux"
       }
     }
+
     defaultBackend = {
       nodeSelector = {
         "kubernetes.io/os" = "linux"
       }
     }
+
     tcp = {
       for listener in var.controller_service_node_ports :
       (listener.port) => listener.name

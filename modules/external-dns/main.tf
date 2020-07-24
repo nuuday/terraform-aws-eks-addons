@@ -13,7 +13,16 @@ locals {
     aws = {
       zoneType = var.zone_type
       region   = data.aws_region.external_dns.name
+
+      preferCNAME = var.prefer_cname
     }
+
+    # Optionally prefer CNAME records over ALIAS and A records.
+    # When creating CNAMEs, External DNS will have to prefix
+    # the TXT records used for registry.
+    # Can't have TXT records and CNAME records with the same name.
+    txtPrefix = var.prefer_cname ? "prefix" : ""
+
     zoneIdFilters = local.route53_zone_ids
     nodeSelector = {
       "kubernetes.io/os" = "linux"

@@ -43,6 +43,11 @@ variable "oidc_provider_issuer_url" {
   type        = string
 }
 
+variable "prefer_cname" {
+  description = "Prefers CNAME records over ALIAS records."
+  default     = false
+}
+
 variable "tags" {
   description = "Tags to apply to taggable resources provisioned by this module."
   type        = map(string)

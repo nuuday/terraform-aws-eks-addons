@@ -41,6 +41,11 @@ variable "enable" {
   type        = bool
 }
 
+variable "install_clusterissuers" {
+  description = "Whether to install ClusterIssuers"
+  default     = true
+}
+
 variable "namespace" {
   default     = "cert-manager"
   description = "Namespace to deploy cert-manager in."

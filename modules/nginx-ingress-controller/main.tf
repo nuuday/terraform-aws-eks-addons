@@ -23,6 +23,15 @@ locals {
         "prometheus.io/port" : "10254"
       }
 
+      nodeSelector = merge(
+        {
+          "kubernetes.io/os" = "linux"
+        },
+        var.node_selectors
+      )
+
+      tolerations = var.tolerations
+
       metrics = {
         enabled = true
         port : 10254
@@ -72,10 +81,6 @@ locals {
 
       extraArgs = {
         "publish-status-address" = var.loadbalancer_fqdn
-      }
-
-      nodeSelector = {
-        "kubernetes.io/os" = "linux"
       }
     }
 

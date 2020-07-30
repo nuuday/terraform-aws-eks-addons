@@ -190,7 +190,7 @@ resource "null_resource" "aws_iam_cluster_issuer" {
   count = var.enable && var.install_clusterissuers ? 1 : 0
 
   triggers = {
-    always_run = "${timestamp()}"
+    always_run = var.force_clusterissuers_recreate ? "${timestamp()}" : ""
   }
 
   provisioner "local-exec" {
@@ -212,7 +212,7 @@ resource "null_resource" "aws_iam_cluster_issuer_production" {
   count = var.enable && var.install_clusterissuers ? 1 : 0
 
   triggers = {
-    always_run = "${timestamp()}"
+    always_run = var.force_clusterissuers_recreate ? "${timestamp()}" : ""
   }
 
   provisioner "local-exec" {

@@ -48,6 +48,11 @@ variable "install_clusterissuers" {
   default     = true
 }
 
+variable "force_clusterissuers_recreate" {
+  description = "If installing ClusterIssuers, this determines if they're recreated."
+  default     = true
+}
+
 variable "namespace" {
   default     = "cert-manager"
   description = "Namespace to deploy cert-manager in."

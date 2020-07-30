@@ -35,3 +35,14 @@ variable "create_namespace" {
   description = "Whether to create the namespace defined in the namespace variable. Will fail if the namespace already exists"
   default     = false
 }
+
+variable "node_selectors" {
+  description = "Node selectors for the ingress controller"
+  type        = map(string)
+  default     = {}
+}
+
+variable "tolerations" {
+  description = "Tolerations for the ingress controller"
+  default     = []
+}

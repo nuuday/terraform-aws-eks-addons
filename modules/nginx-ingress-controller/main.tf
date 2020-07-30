@@ -18,6 +18,8 @@ locals {
     controller = {
       ingressClass = "nginx"
 
+      kind = var.controller_kind
+
       podAnnotations = {
         "prometheus.io/scrape" : "true"
         "prometheus.io/port" : "10254"

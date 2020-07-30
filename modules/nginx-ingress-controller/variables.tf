@@ -31,6 +31,11 @@ variable "controller_service_node_ports" {
   ]
 }
 
+variable "controller_kind" {
+  description = "Whether to use Deployment or DaemonSet when deploying the controller."
+  default     = "Deployment"
+}
+
 variable "create_namespace" {
   description = "Whether to create the namespace defined in the namespace variable. Will fail if the namespace already exists"
   default     = false

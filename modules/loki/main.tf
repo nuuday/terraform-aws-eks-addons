@@ -187,6 +187,15 @@ module "s3_bucket" {
 
 }
 
+data "kubernetes_all_namespaces" "all" {}
+
+resource "kubernetes_namespace" "this" {
+  count = contains(data.kubernetes_all_namespaces.all.namespaces, local.namespace) ? 0 : 1
+
+  metadata {
+    name = local.namespace
+  }
+}
 
 resource "helm_release" "loki" {
   count      = var.enable ? 1 : 0
@@ -200,6 +209,7 @@ resource "helm_release" "loki" {
   values = [yamlencode(local.loki_values)]
 
 
+  depends_on = [kubernetes_namespace.this]
 
   /*  set {
     name  = "loki.serviceAccount.annotations.eks\\.amazonaws\\.com/role-arn"

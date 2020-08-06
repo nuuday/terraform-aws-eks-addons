@@ -192,6 +192,9 @@ resource "null_resource" "aws_iam_cluster_issuer" {
 
   triggers = {
     always_run = var.force_clusterissuers_recreate ? "${timestamp()}" : ""
+    email      = var.email
+    zones      = jsonencode(var.route53_zones)
+    class      = var.ingress_class
   }
 
   provisioner "local-exec" {

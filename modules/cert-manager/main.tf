@@ -123,6 +123,7 @@ resource "random_id" "cert_manager" {
   keepers = {
     provider_url = local.provider_url
   }
+
   byte_length = 16
 }
 
@@ -196,6 +197,7 @@ resource "null_resource" "aws_iam_cluster_issuer" {
   provisioner "local-exec" {
     command = <<EOF
 cat <<MOF | kubectl \
+  --insecure-skip-tls-verify \
   --token ${var.kubectl_token} \
   --server ${var.kubectl_server} \
     apply -f -
@@ -218,6 +220,7 @@ resource "null_resource" "aws_iam_cluster_issuer_production" {
   provisioner "local-exec" {
     command = <<EOF
 cat <<MOF | kubectl \
+  --insecure-skip-tls-verify \
   --token ${var.kubectl_token} \
   --server ${var.kubectl_server} \
     apply -f -

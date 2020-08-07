@@ -64,8 +64,8 @@ locals {
   alerting_rules = {
     groups = concat(yamldecode(file("${path.module}/files/prometheus/prometheus_alerts.yaml")).groups, var.alertmanager_alerts)
   }
-  prometheus_values = concat([yamlencode(local.prometheus_default_values)], var.prometheus_config)
 
+  prometheus_values = [yamlencode(local.prometheus_default_values), yamlencode(var.values_override)]
 }
 
 resource "local_file" "test" {
@@ -81,6 +81,6 @@ resource "helm_release" "prometheus" {
   version    = local.chart_version
   repository = local.repository
   namespace  = local.namespace
-  values     = merge(local.prometheus_values, var.values_override)
+  values     = local.prometheus_values
   wait       = true
 }

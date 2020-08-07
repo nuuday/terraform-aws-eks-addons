@@ -1,5 +1,3 @@
-
-
 variable "chart_version" {
   default     = "11.3.0"
   description = "prometheus version to install"
@@ -17,6 +15,11 @@ variable "enable" {
   default     = true
   description = "Enable or Disable prometheus."
   type        = bool
+}
+
+variable "values_override" {
+  description = "Chart values which will override the default ones."
+  default     = {}
 }
 
 variable "persistence_size" {

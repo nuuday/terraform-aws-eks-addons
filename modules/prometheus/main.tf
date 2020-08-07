@@ -4,6 +4,7 @@ locals {
   release_name  = "prometheus"
   namespace     = var.namespace
   repository    = "https://kubernetes-charts.storage.googleapis.com"
+
   prometheus_default_values = {
     alertmanager = {
       enabled = var.alertmanager_enable
@@ -73,14 +74,13 @@ resource "local_file" "test" {
 }
 
 resource "helm_release" "prometheus" {
-  count      = var.enable ? 1 : 0
+  count = var.enable ? 1 : 0
+
   name       = local.release_name
   chart      = local.chart_name
   version    = local.chart_version
   repository = local.repository
   namespace  = local.namespace
-
-  wait   = true
-  values = local.prometheus_values
-
+  values     = merge(local.prometheus_values, var.values_override)
+  wait       = true
 }

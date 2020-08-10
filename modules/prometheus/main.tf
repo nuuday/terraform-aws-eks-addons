@@ -72,6 +72,16 @@ resource "local_file" "test" {
   content  = yamlencode(local.alerting_rules)
 }
 
+data "kubernetes_all_namespaces" "all" {}
+
+resource "kubernetes_namespace" "this" {
+  count = contains(data.kubernetes_all_namespaces.all.namespaces, local.namespace) ? 0 : 1
+
+  metadata {
+    name = local.namespace
+  }
+}
+
 resource "helm_release" "prometheus" {
   count      = var.enable ? 1 : 0
   name       = local.release_name
@@ -83,4 +93,5 @@ resource "helm_release" "prometheus" {
   wait   = true
   values = local.prometheus_values
 
+  depends_on = [kubernetes_namespace.this]
 }

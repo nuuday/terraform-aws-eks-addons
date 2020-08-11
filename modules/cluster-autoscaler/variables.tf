@@ -46,3 +46,9 @@ variable "priority_class" {
   default     = "system-cluster-critical"
   description = "Change cluster autoscaler priority class"
 }
+
+variable "extra_args" {
+  description = "Extra arguments to pass to cluster-autoscaler."
+  type        = map(string)
+  default     = {}
+}

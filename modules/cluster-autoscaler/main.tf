@@ -85,6 +85,15 @@ resource "helm_release" "cluster_autoscaler" {
   namespace        = local.namespace
   create_namespace = true
 
+  dynamic "set" {
+    for_each = var.extra_args
+
+    content {
+      name  = "extraArgs.${set.key}"
+      value = set.value
+    }
+  }
+
   set {
     name  = "cloudProvider"
     value = "aws"

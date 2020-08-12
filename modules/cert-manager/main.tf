@@ -54,6 +54,20 @@ locals {
     }
   }
 
+  http01_solver = {
+    http01 = {
+      ingress = {
+        class = var.ingress_class
+      }
+    }
+  }
+
+  # Only include dns01 solver if Route53 zones are supplied.
+  relevant_solvers = length(var.route53_zones) > 0 ? [
+    tomap(local.http01_solver),
+    tomap(local.dns01_solver),
+  ] : [local.http01_solver]
+
   manifest_cluster_issuer_staging = {
     "apiVersion" = "cert-manager.io/v1alpha2"
     "kind"       = "ClusterIssuer"
@@ -67,16 +81,7 @@ locals {
         privateKeySecretRef = {
           name = "acme-staging"
         }
-        solvers = [
-          {
-            http01 = {
-              ingress = {
-                class = var.ingress_class
-              }
-            }
-          },
-          length(var.route53_zones) > 0 ? local.dns01_solver : null
-        ]
+        solvers = local.relevant_solvers
       }
     }
   }
@@ -94,16 +99,7 @@ locals {
         privateKeySecretRef = {
           name = "acme-production"
         }
-        solvers = [
-          {
-            http01 = {
-              ingress = {
-                class = var.ingress_class
-              }
-            }
-          },
-          length(var.route53_zones) > 0 ? local.dns01_solver : null
-        ]
+        solvers = local.relevant_solvers
       }
     }
   }

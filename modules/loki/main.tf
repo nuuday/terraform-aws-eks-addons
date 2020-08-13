@@ -190,11 +190,8 @@ module "s3_bucket" {
 
 }
 
-data "kubernetes_all_namespaces" "all" {}
-
 resource "kubernetes_namespace" "this" {
-  count = contains(data.kubernetes_all_namespaces.all.namespaces, local.namespace) ? 0 : 1
-
+  count = var.create_namespace == true ? 1 : 0
   metadata {
     name = local.namespace
   }

@@ -21,6 +21,10 @@ variable "cluster_name" {
   type        = string
 }
 
+variable "create_namespace" {
+  description = "Whether to create the namespace defined in the namespace variable. Will fail if the namespace already exists."
+  default     = false
+}
 
 variable "oidc_provider_issuer_url" {
   description = "Issuer used in the OIDC provider associated with the EKS cluster to support IRSA."

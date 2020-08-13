@@ -122,7 +122,8 @@ resource "random_id" "cert_manager" {
 }
 
 module "iam" {
-  source                        = "terraform-aws-modules/iam/aws//modules/iam-assumable-role-with-oidc"
+  source = "github.com/terraform-aws-modules/terraform-aws-iam//modules/iam-assumable-role-with-oidc?ref=v2.14.0"
+
   create_role                   = var.enable
   role_name                     = "${local.release_name}-irsa-${random_id.cert_manager.hex}"
   provider_url                  = local.provider_url

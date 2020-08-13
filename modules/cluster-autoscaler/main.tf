@@ -17,7 +17,7 @@ locals {
 }
 
 module "iam" {
-  source = "github.com/terraform-aws-modules/terraform-aws-iam//modules/iam-assumable-role-with-oidc?ref=v2.10.0"
+  source = "github.com/terraform-aws-modules/terraform-aws-iam//modules/iam-assumable-role-with-oidc?ref=v2.14.0"
 
   create_role                   = var.enable
   role_name                     = "${var.cluster_name}-cluster-autoscaler-irsa"

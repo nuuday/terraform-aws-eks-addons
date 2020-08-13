@@ -162,7 +162,7 @@ resource "aws_iam_role_policy" "loki" {
 }
 
 module "iam" {
-  source = "terraform-aws-modules/iam/aws//modules/iam-assumable-role-with-oidc"
+  source  = "terraform-aws-modules/iam/aws//modules/iam-assumable-role-with-oidc"
   version = "2.14.0"
 
 

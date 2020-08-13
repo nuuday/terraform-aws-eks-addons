@@ -106,9 +106,7 @@ locals {
 
 }
 
-data "aws_region" "cert_manager" {
-
-}
+data "aws_region" "cert_manager" {}
 
 data "aws_route53_zone" "cert_manager" {
   count = length(var.route53_zones)
@@ -133,12 +131,16 @@ module "iam" {
 }
 
 data "aws_iam_policy_document" "cert_manager" {
+  count = var.enable && length(var.route53_zones) > 0 ? 1 : 0
+
   statement {
     actions = [
       "route53:GetChange"
     ]
+
     resources = ["arn:aws:route53:::change/*"]
   }
+
   statement {
     actions = [
       "route53:ChangeResourceRecordSets",
@@ -149,6 +151,7 @@ data "aws_iam_policy_document" "cert_manager" {
       "arn:aws:route53:::hostedzone/${zone.zone_id}"
     ]
   }
+
   statement {
     actions = [
       "route53:ListHostedZonesByName"
@@ -158,10 +161,11 @@ data "aws_iam_policy_document" "cert_manager" {
 }
 
 resource "aws_iam_role_policy" "cert_manager" {
-  count  = var.enable && length(var.route53_zones) > 0 ? 1 : 0
+  count = var.enable && length(var.route53_zones) > 0 ? 1 : 0
+
   name   = "cert-manager-${random_id.cert_manager.hex}"
   role   = module.iam.this_iam_role_name
-  policy = data.aws_iam_policy_document.cert_manager.json
+  policy = data.aws_iam_policy_document.cert_manager.0.json
 }
 
 resource "helm_release" "cert_manager" {

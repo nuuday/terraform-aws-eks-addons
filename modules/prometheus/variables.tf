@@ -12,6 +12,10 @@ variable "namespace" {
   type        = string
 }
 
+variable "create_namespace" {
+  description = "Whether to create the namespace defined in the namespace variable. Will fail if the namespace already exists."
+  default     = false
+}
 
 variable "enable" {
   default     = true

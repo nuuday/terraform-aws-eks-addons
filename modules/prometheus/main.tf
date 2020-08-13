@@ -4,6 +4,7 @@ locals {
   release_name  = "prometheus"
   namespace     = var.namespace
   repository    = "https://kubernetes-charts.storage.googleapis.com"
+
   prometheus_default_values = {
     alertmanager = {
       enabled = var.alertmanager_enable
@@ -72,10 +73,8 @@ resource "local_file" "test" {
   content  = yamlencode(local.alerting_rules)
 }
 
-data "kubernetes_all_namespaces" "all" {}
-
 resource "kubernetes_namespace" "this" {
-  count = contains(data.kubernetes_all_namespaces.all.namespaces, local.namespace) ? 0 : 1
+  count = var.create_namespace ? 1 : 0
 
   metadata {
     name = local.namespace

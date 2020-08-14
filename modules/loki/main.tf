@@ -176,8 +176,9 @@ module "iam" {
 
 
 module "s3_bucket" {
-  source        = "terraform-aws-modules/s3-bucket/aws"
-  version       = "1.9.0"
+  source  = "terraform-aws-modules/s3-bucket/aws"
+  version = "1.10.0"
+
   create_bucket = var.enable
   bucket_prefix = local.bucket_prefix
   acl           = "private"

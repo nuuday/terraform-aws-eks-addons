@@ -207,7 +207,7 @@ resource "helm_release" "loki" {
   namespace  = local.namespace
 
   wait   = false
-  values = [yamlencode(local.loki_values)]
+  values = [yamlencode(local.loki_values), yamlencode(var.values_overrides)]
 
 
   depends_on = [kubernetes_namespace.this]

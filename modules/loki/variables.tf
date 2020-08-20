@@ -31,6 +31,12 @@ variable "oidc_provider_issuer_url" {
   type        = string
 }
 
+variable "values_overrides" {
+  description = "Helm Chart values which will override defaults."
+  type        = map
+  default     = {}
+}
+
 variable "tags" {
   description = "Tags to apply to taggable resources provisioned by this module."
   type        = map(string)

@@ -37,18 +37,22 @@ locals {
     server = {
       retention        = var.retention
       persistentVolume = var.persistence_size
+
       resources = {
         requests = {
           cpu    = "50m"
           memory = "128Mi"
         }
       }
+
       global = {
         scrape_interval = "10s"
       }
+
       persistentVolume = {
         storageClass = "gp2"
       }
+
       statefulSet = {
         enabled = true
         headless = {
@@ -61,11 +65,12 @@ locals {
       "recording_rules.yml" = yamldecode(file("${path.module}/files/prometheus/prometheus_rules.yaml"))
     }
   }
+
   alerting_rules = {
     groups = concat(yamldecode(file("${path.module}/files/prometheus/prometheus_alerts.yaml")).groups, var.alertmanager_alerts)
   }
-  prometheus_values = concat([yamlencode(local.prometheus_default_values)], var.prometheus_config)
 
+  prometheus_values = concat([yamlencode(local.prometheus_default_values)], var.prometheus_config)
 }
 
 resource "kubernetes_namespace" "this" {

@@ -33,7 +33,7 @@ variable "oidc_provider_issuer_url" {
 
 variable "values_overrides" {
   description = "Helm Chart values which will override defaults."
-  type        = map
+  type        = any
   default     = {}
 }
 

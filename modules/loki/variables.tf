@@ -37,6 +37,11 @@ variable "values_overrides" {
   default     = {}
 }
 
+variable "prometheus_uri" {
+  description = "URI of Prometheus service complete with protocol and port."
+  default     = "http://prometheus-server.kube-system.svc.cluster.local:9090"
+}
+
 variable "tags" {
   description = "Tags to apply to taggable resources provisioned by this module."
   type        = map(string)

@@ -27,6 +27,11 @@ variable "oidc_provider_issuer_url" {
   type        = string
 }
 
+variable "prometheus_uri" {
+  description = "URI of Prometheus service complete with protocol and port."
+  value       = "http://prometheus-server.kube-system.svc.cluster.local:9090"
+}
+
 variable "tags" {
   description = "Tags to apply to taggable resources provisioned by this module."
   type        = map(string)

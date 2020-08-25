@@ -59,7 +59,7 @@ locals {
             dynamodb = {
               dynamodb_url = "dynamodb://${data.aws_region.loki.name}"
               metrics = {
-                url : "http://prometheus-server.${var.namespace}.svc.cluster.local:9090"
+                url : var.prometheus_uri
               }
             }
           }

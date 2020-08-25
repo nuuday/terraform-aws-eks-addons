@@ -39,7 +39,7 @@ variable "values_overrides" {
 
 variable "prometheus_uri" {
   description = "URI of Prometheus service complete with protocol and port."
-  value       = "http://prometheus-server.kube-system.svc.cluster.local:9090"
+  default     = "http://prometheus-server.kube-system.svc.cluster.local:9090"
 }
 
 variable "tags" {

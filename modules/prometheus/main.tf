@@ -68,11 +68,6 @@ locals {
 
 }
 
-resource "local_file" "test" {
-  filename = "alert_rules.yaml"
-  content  = yamlencode(local.alerting_rules)
-}
-
 resource "kubernetes_namespace" "this" {
   count = var.create_namespace ? 1 : 0
 

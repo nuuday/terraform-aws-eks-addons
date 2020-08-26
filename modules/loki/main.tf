@@ -66,7 +66,10 @@ locals {
         }
         table_manager = {
           retention_deletes_enabled = true
-          retention_period          = "720h"
+          # Loki uses the Golang [`ParseDuration`](https://golang.org/pkg/time/#ParseDuration) to parse
+          # duration formats, and unfortunately 'd' isn't supported.
+          retention_period = "${var.retention_days * 24}h"
+
           index_tables_provisioning = {
             provisioned_write_throughput = 1
             provisioned_read_throughput  = 1
@@ -187,8 +190,20 @@ module "s3_bucket" {
   versioning = {
     enabled = false
   }
-  tags = var.tags
 
+  lifecycle_rule = [
+    {
+      id      = "retention"
+      enabled = true
+      prefix  = "/"
+
+      expiration = {
+        days = var.retention_days
+      }
+    }
+  ]
+
+  tags = var.tags
 }
 
 resource "kubernetes_namespace" "this" {

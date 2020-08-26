@@ -42,6 +42,11 @@ variable "prometheus_uri" {
   default     = "http://prometheus-server.kube-system.svc.cluster.local:9090"
 }
 
+variable "retention_days" {
+  description = "Number of days Loki will store logs."
+  default     = 30
+}
+
 variable "tags" {
   description = "Tags to apply to taggable resources provisioned by this module."
   type        = map(string)

@@ -1,5 +1,5 @@
 variable "enable" {
-  description = "Enable or disable CAlico"
+  description = "Enable or disable Calico"
   default     = true
   type        = bool
 }
@@ -16,14 +16,8 @@ variable "create_namespace" {
 }
 
 variable "namespace" {
-  description = "Namespace to deploy cert-manager in."
+  description = "Namespace to deploy Calico in."
   default     = "kube-system"
   type        = string
-}
-
-variable "values" {
-  description = "Value override for Helm chart."
-  default     = {}
-  type        = any
 }
 

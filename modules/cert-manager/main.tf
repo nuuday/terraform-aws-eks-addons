@@ -62,13 +62,8 @@ locals {
     }
   }
 
-  # Only include dns01 solver if Route53 zones are supplied.
-  relevant_solvers = length(var.route53_zones) > 0 ? [
-    tomap(local.http01_solver),
-    tomap(local.dns01_solver),
-  ] : [local.http01_solver]
-
-  manifest_cluster_issuer_staging = {
+  # DNS01 and HTTP01
+  dns_http_manifest_cluster_issuer_staging = {
     "apiVersion" = "cert-manager.io/v1alpha2"
     "kind"       = "ClusterIssuer"
     "metadata" = {
@@ -78,15 +73,17 @@ locals {
       acme = {
         email  = var.email
         server = "https://acme-staging-v02.api.letsencrypt.org/directory"
+
         privateKeySecretRef = {
           name = "acme-staging"
         }
-        solvers = local.relevant_solvers
+
+        solvers = [local.dns01_solver, local.http01_solver]
       }
     }
   }
 
-  manifest_cluster_issuer_production = {
+  dns_http_manifest_cluster_issuer_production = {
     "apiVersion" = "cert-manager.io/v1alpha2"
     "kind"       = "ClusterIssuer"
     "metadata" = {
@@ -96,14 +93,56 @@ locals {
       acme = {
         email  = var.email
         server = "https://acme-v02.api.letsencrypt.org/directory"
+
         privateKeySecretRef = {
           name = "acme-production"
         }
-        solvers = local.relevant_solvers
+
+        solvers = [local.dns01_solver, local.http01_solver]
       }
     }
   }
 
+  # HTTP01
+  http_manifest_cluster_issuer_staging = {
+    "apiVersion" = "cert-manager.io/v1alpha2"
+    "kind"       = "ClusterIssuer"
+    "metadata" = {
+      name = "letsencrypt-staging"
+    }
+    spec = {
+      acme = {
+        email  = var.email
+        server = "https://acme-staging-v02.api.letsencrypt.org/directory"
+
+        privateKeySecretRef = {
+          name = "acme-staging"
+        }
+
+        solvers = [local.http01_solver]
+      }
+    }
+  }
+
+  http_manifest_cluster_issuer_production = {
+    "apiVersion" = "cert-manager.io/v1alpha2"
+    "kind"       = "ClusterIssuer"
+    "metadata" = {
+      name = "letsencrypt"
+    }
+    spec = {
+      acme = {
+        email  = var.email
+        server = "https://acme-v02.api.letsencrypt.org/directory"
+
+        privateKeySecretRef = {
+          name = "acme-production"
+        }
+
+        solvers = [local.http01_solver]
+      }
+    }
+  }
 }
 
 data "aws_region" "cert_manager" {}
@@ -187,9 +226,11 @@ resource "time_sleep" "wait_30_seconds" {
   create_duration = "30s"
 }
 
+# DNS01 and HTTP01
+
 // TODO: This needs to be changed with Terraform 0.13 when new kubernetes provider is available
-resource "null_resource" "aws_iam_cluster_issuer" {
-  count = var.enable && var.install_clusterissuers ? 1 : 0
+resource "null_resource" "aws_iam_dns_http_cluster_issuer" {
+  count = var.enable && var.install_clusterissuers && length(var.route53_zones) > 0 ? 1 : 0
 
   triggers = {
     always_run = var.force_clusterissuers_recreate ? "${timestamp()}" : ""
@@ -205,7 +246,7 @@ cat <<MOF | kubectl \
   --token ${var.kubectl_token} \
   --server ${var.kubectl_server} \
     apply -f -
-${yamlencode(local.manifest_cluster_issuer_staging)}
+${yamlencode(local.dns_http_manifest_cluster_issuer_staging)}
 MOF
 EOF
   }
@@ -214,8 +255,8 @@ EOF
 }
 
 // TODO: This needs to be changed with Terraform 0.13 when new kubernetes provider is available
-resource "null_resource" "aws_iam_cluster_issuer_production" {
-  count = var.enable && var.install_clusterissuers ? 1 : 0
+resource "null_resource" "aws_iam_dns_http_cluster_issuer_production" {
+  count = var.enable && var.install_clusterissuers && length(var.route53_zones) > 0 ? 1 : 0
 
   triggers = {
     always_run = var.force_clusterissuers_recreate ? "${timestamp()}" : ""
@@ -228,7 +269,58 @@ cat <<MOF | kubectl \
   --token ${var.kubectl_token} \
   --server ${var.kubectl_server} \
     apply -f -
-${yamlencode(local.manifest_cluster_issuer_production)}
+${yamlencode(local.dns_http_manifest_cluster_issuer_production)}
+MOF
+EOF
+  }
+
+  depends_on = [time_sleep.wait_30_seconds]
+}
+
+# HTTP01
+
+// TODO: This needs to be changed with Terraform 0.13 when new kubernetes provider is available
+resource "null_resource" "aws_iam_http_cluster_issuer" {
+  count = var.enable && var.install_clusterissuers && length(var.route53_zones) == 0 ? 1 : 0
+
+  triggers = {
+    always_run = var.force_clusterissuers_recreate ? "${timestamp()}" : ""
+    email      = var.email
+    zones      = jsonencode(var.route53_zones)
+    class      = var.ingress_class
+  }
+
+  provisioner "local-exec" {
+    command = <<EOF
+cat <<MOF | kubectl \
+  --insecure-skip-tls-verify \
+  --token ${var.kubectl_token} \
+  --server ${var.kubectl_server} \
+    apply -f -
+${yamlencode(local.http_manifest_cluster_issuer_staging)}
+MOF
+EOF
+  }
+
+  depends_on = [time_sleep.wait_30_seconds]
+}
+
+// TODO: This needs to be changed with Terraform 0.13 when new kubernetes provider is available
+resource "null_resource" "aws_iam_http_cluster_issuer_production" {
+  count = var.enable && var.install_clusterissuers && length(var.route53_zones) == 0 ? 1 : 0
+
+  triggers = {
+    always_run = var.force_clusterissuers_recreate ? "${timestamp()}" : ""
+  }
+
+  provisioner "local-exec" {
+    command = <<EOF
+cat <<MOF | kubectl \
+  --insecure-skip-tls-verify \
+  --token ${var.kubectl_token} \
+  --server ${var.kubectl_server} \
+    apply -f -
+${yamlencode(local.http_manifest_cluster_issuer_production)}
 MOF
 EOF
   }

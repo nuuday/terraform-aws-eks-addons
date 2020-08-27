@@ -11,7 +11,7 @@ resource "helm_release" "prometheus" {
   name       = "aws-calico"
   chart      = "aws-calico"
   version    = var.chart_version
-  repository = "https://aws.github.io/eks-charts" 
+  repository = "https://aws.github.io/eks-charts"
   namespace  = var.namespace
   values     = var.values
   wait       = true

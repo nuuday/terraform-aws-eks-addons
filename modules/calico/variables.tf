@@ -32,9 +32,3 @@ variable "values" {
   type        = any
 }
 
-variable "tags" {
-  description = "Tags to apply to taggable resources provisioned by this module."
-  type        = map(string)
-  default     = {}
-}
-

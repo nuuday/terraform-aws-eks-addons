@@ -1,0 +1,5 @@
+# Source: https://github.com/aws/eks-charts/blob/v0.0.28/stable/aws-calico/crds/kustomization.yaml
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+- crds.yaml

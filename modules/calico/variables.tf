@@ -21,3 +21,11 @@ variable "namespace" {
   type        = string
 }
 
+variable "kubectl_server" {
+  description = "Hostname of the EKS control plane. This will be passed to `kubectl --server $here`."
+  type        = string
+}
+
+variable "kubectl_token" {
+  type = string
+}

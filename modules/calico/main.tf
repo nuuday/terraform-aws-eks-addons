@@ -1,3 +1,13 @@
+locals {
+  values = {
+    calico = {
+      node = {
+        logseverity = "Debug"
+      }
+    }
+  }
+}
+
 resource "kubernetes_namespace" "this" {
   count = var.create_namespace ? 1 : 0
 
@@ -29,14 +39,7 @@ resource "helm_release" "calico" {
   repository = "https://aws.github.io/eks-charts"
   namespace  = var.namespace
   wait       = true
-
-  values = {
-    calico = {
-      node = {
-        logseverity = "Debug"
-      }
-    }
-  }
+  values     = [yamlencode(local.values)] 
 
   depends_on = [kubernetes_namespace.this]
 }

@@ -6,20 +6,20 @@ resource "kubernetes_namespace" "this" {
   }
 }
 
-resource "null_resource" "apply_crds" {
-  count = var.enable ? 1 : 0
-
-  provisioner "local-exec" {
-    command = <<EOF
-cat <<MOF | kubectl \
-  --insecure-skip-tls-verify \
-  --token ${var.kubectl_token} \
-  --server ${var.kubectl_server} \
-    apply -k "${abspath(./crds)}"
-MOF
-EOF
-  }
-}
+# resource "null_resource" "apply_crds" {
+#   count = var.enable ? 1 : 0
+# 
+#   provisioner "local-exec" {
+#     command = <<EOF
+# cat <<MOF | kubectl \
+#   --insecure-skip-tls-verify \
+#   --token ${var.kubectl_token} \
+#   --server ${var.kubectl_server} \
+#     apply -k "${abspath(./crds)}"
+# MOF
+# EOF
+#   }
+# }
 
 resource "helm_release" "calico" {
   count      = var.enable ? 1 : 0

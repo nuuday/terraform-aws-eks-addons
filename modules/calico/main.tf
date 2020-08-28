@@ -15,7 +15,7 @@ cat <<MOF | kubectl \
   --insecure-skip-tls-verify \
   --token ${var.kubectl_token} \
   --server ${var.kubectl_server} \
-    apply -k "./crds"
+    apply -k "${abspath(./crds)}"
 MOF
 EOF
   }

@@ -30,5 +30,13 @@ resource "helm_release" "calico" {
   namespace  = var.namespace
   wait       = true
 
+  values = {
+    calico = {
+      node = {
+        logseverity = "Debug"
+      }
+    }
+  }
+
   depends_on = [kubernetes_namespace.this]
 }

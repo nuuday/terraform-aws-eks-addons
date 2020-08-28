@@ -7,7 +7,7 @@ resource "kubernetes_namespace" "this" {
 }
 
 resource "helm_release" "calico" {
-  count      = var.enable ? 1 : 0
+  count = var.enable ? 1 : 0
 
   name       = "aws-calico"
   chart      = "aws-calico"

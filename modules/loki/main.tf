@@ -208,8 +208,13 @@ module "s3_bucket" {
 
 resource "kubernetes_namespace" "this" {
   count = var.create_namespace == true ? 1 : 0
+
   metadata {
     name = local.namespace
+  }
+
+  timeouts {
+    delete = "10m"
   }
 }
 

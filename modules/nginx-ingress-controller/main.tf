@@ -124,6 +124,6 @@ resource "helm_release" "nginx_ingress" {
   repository       = local.repository
   namespace        = local.namespace
   create_namespace = var.create_namespace
-  wait             = true
+  wait             = var.wait
   values           = [yamlencode(local.values)]
 }

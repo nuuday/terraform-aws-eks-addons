@@ -15,3 +15,8 @@ variable "namespace" {
   description = "Namespace to deploy AWS Node Termination handler in."
   type        = string
 }
+
+variable "wait" {
+  description = "Whether to wait for the deployment of this add-on to succeed before completing."
+  default     = true
+}

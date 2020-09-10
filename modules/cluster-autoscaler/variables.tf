@@ -52,3 +52,8 @@ variable "extra_args" {
   type        = map(string)
   default     = {}
 }
+
+variable "wait" {
+  description = "Whether to wait for the deployment of this add-on to succeed before completing."
+  default     = true
+}

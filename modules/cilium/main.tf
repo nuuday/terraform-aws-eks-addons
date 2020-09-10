@@ -17,7 +17,7 @@ resource "helm_release" "cilium" {
   namespace        = local.namespace
   create_namespace = true
 
-  wait   = true
+  wait   = var.wait
   values = [file("${path.module}/files/helm/cilium.yaml")]
 
   set {

@@ -226,7 +226,7 @@ resource "helm_release" "loki" {
   repository = local.repository
   namespace  = local.namespace
 
-  wait   = false
+  wait   = var.wait
   values = [yamlencode(local.loki_values), yamlencode(var.values_overrides)]
 
 

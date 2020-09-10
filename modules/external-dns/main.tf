@@ -103,7 +103,7 @@ resource "helm_release" "external_dns" {
   repository = local.repository
   namespace  = local.namespace
 
-  wait   = true
+  wait   = var.wait
   values = [yamlencode(local.values)]
 }
 

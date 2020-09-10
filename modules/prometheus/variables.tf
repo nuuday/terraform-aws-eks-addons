@@ -65,3 +65,8 @@ variable "pushgateway_enable" {
 variable "prometheus_config" {
   default = []
 }
+
+variable "wait" {
+  description = "Whether to wait for the deployment of this add-on to succeed before completing."
+  default     = true
+}

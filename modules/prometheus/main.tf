@@ -89,7 +89,7 @@ resource "helm_release" "prometheus" {
   repository = local.repository
   namespace  = local.namespace
 
-  wait   = true
+  wait   = var.wait
   values = local.prometheus_values
 
   depends_on = [kubernetes_namespace.this]

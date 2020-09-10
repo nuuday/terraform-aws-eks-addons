@@ -14,7 +14,7 @@ resource "helm_release" "node_termination_handler" {
   repository       = local.repository
   namespace        = local.namespace
   create_namespace = true
-  wait             = true
+  wait             = var.wait
 
   # Ensure the pods only run on Linux nodes,
   # in case we have Windows nodes in our cluster too.

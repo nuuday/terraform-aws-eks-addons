@@ -106,6 +106,10 @@ resource "kubernetes_namespace" "this" {
   metadata {
     name = var.namespace
 
+    labels = {
+      role = "nginx-ingress"
+    }
+
     annotations = {
       managedby = "terraform"
     }

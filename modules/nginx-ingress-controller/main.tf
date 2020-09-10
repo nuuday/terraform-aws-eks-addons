@@ -107,7 +107,7 @@ resource "kubernetes_namespace" "this" {
     name = var.namespace
 
     labels = {
-      role = "nginx_ingress"
+      role = "nginx-ingress"
     }
 
     annotations = {

@@ -216,7 +216,7 @@ resource "helm_release" "cert_manager" {
   repository       = local.repository
   namespace        = local.namespace
   create_namespace = true
-  wait             = true
+  wait             = var.wait
   values           = [yamlencode(local.values)]
 }
 

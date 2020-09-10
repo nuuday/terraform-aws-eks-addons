@@ -10,7 +10,7 @@ resource "helm_release" "kube-monkey" {
   name      = local.release_name
   chart     = local.chart_name
   namespace = local.namespace
-  wait      = false
+  wait      = var.wait
 
 
   set {

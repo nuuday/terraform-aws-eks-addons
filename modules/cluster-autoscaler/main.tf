@@ -84,6 +84,7 @@ resource "helm_release" "cluster_autoscaler" {
   repository       = local.repository
   namespace        = local.namespace
   create_namespace = true
+  wait             = var.wait
 
   dynamic "set" {
     for_each = var.extra_args

@@ -14,7 +14,7 @@ resource "helm_release" "calico" {
   version    = var.chart_version
   repository = "https://aws.github.io/eks-charts"
   namespace  = var.namespace
-  wait       = true
+  wait       = var.wait
 
   depends_on = [kubernetes_namespace.this]
 }

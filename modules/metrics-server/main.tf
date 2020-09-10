@@ -13,7 +13,7 @@ resource "helm_release" "metrics-server" {
   version          = var.chart_version
   repository       = local.repository
   namespace        = local.namespace
-  wait             = false
+  wait             = var.wait
   create_namespace = true
 
 

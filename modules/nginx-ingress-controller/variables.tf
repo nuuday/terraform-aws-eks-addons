@@ -18,6 +18,20 @@ variable "loadbalancer_fqdn" {
   description = "The FQDN address to set as the load-balancer status of Ingress"
 }
 
+variable "controller_resources" {
+  description = "Specify ingress controller server resource reservations"
+  default = {
+    limits = {
+      memory = "128Mi"
+    }
+    requests = {
+      cpu    = "100m"
+      memory = "64Mi"
+    }
+  }
+}
+
+
 variable "controller_service_node_ports" {
   type = list(object({
     name     = string

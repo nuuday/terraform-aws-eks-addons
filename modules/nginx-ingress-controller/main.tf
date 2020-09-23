@@ -50,16 +50,7 @@ locals {
         enabled = true
       }
 
-      resources = {
-        limits = {
-          memory = "128Mi"
-        }
-
-        requests = {
-          cpu    = "100m"
-          memory = "64Mi"
-        }
-      }
+      resources = var.controller_resources
 
       service = {
         type = "NodePort"

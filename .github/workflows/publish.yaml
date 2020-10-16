@@ -1,0 +1,20 @@
+name: Build and release
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - '**.tf'
+      - '**.yaml'
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    name: Release
+    steps:
+      - name: "Git: Checkout master with full history"
+        uses: actions/checkout@master
+
+      - name: "Build and publish modules"
+        run: |
+          make dist CHANGED="$(git diff --name-only HEAD HEAD~1 | tr '\n' ' ')"

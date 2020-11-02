@@ -165,9 +165,7 @@ resource "aws_iam_role_policy" "loki" {
 }
 
 module "iam" {
-  source  = "terraform-aws-modules/iam/aws//modules/iam-assumable-role-with-oidc"
-  version = "2.14.0"
-
+  source = "github.com/terraform-aws-modules/terraform-aws-iam//modules/iam-assumable-role-with-oidc?ref=v3.2.0"
 
   create_role                   = var.enable
   role_name                     = module.s3_bucket.this_s3_bucket_id
@@ -179,8 +177,7 @@ module "iam" {
 
 
 module "s3_bucket" {
-  source  = "terraform-aws-modules/s3-bucket/aws"
-  version = "1.10.0"
+  source = "github.com/terraform-aws-modules/terraform-aws-s3-bucket?ref=v1.16.0"
 
   create_bucket = var.enable
   bucket_prefix = local.bucket_prefix

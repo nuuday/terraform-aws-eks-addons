@@ -34,6 +34,7 @@ else
 override modules     = $(filter $(foreach change,$(CHANGES), $(call module-changed,$(change))), $(module_list))
 endif
 override module_packages = $(patsubst %,package-%,$(modules))
+override module_publish = $(patsubst %,publish-%,$(modules))
 
 
 define module-version
@@ -47,11 +48,12 @@ endef
 .DEFAULT_GOAL := dist
 .PHONY: dist publish
 dist: $(module_packages)
-
-publish: dist
-	aws s3 cp --acl public-read . --include "*.tar.gz" $(DISTRIBUTION)
+publish: $(module_publish)
 
 # We don't really care about the target name matching the target archive, we will always build the archive if it is
 # present in the module list.
 package-%: $(MODULE_PATH)/%
 	tar --directory=$< -czf $*-$(call module-version,$*).tar.gz .
+
+publish-%: package-%
+	aws s3 cp --acl public-read --dryrun $*-$(call module-version,$*).tar.gz $(DISTRIBUTION)

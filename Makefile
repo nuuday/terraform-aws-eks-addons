@@ -56,4 +56,4 @@ package-%: $(MODULE_PATH)/%
 	tar --directory=$< -czf $*-$(call module-version,$*).tar.gz .
 
 publish-%: package-%
-	aws s3 cp --acl public-read --dryrun $*-$(call module-version,$*).tar.gz $(DISTRIBUTION)
+	aws s3 cp --acl public-read $*-$(call module-version,$*).tar.gz $(DISTRIBUTION)

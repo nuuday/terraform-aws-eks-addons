@@ -24,4 +24,4 @@ jobs:
           AWS_DEFAULT_REGION: eu-north-1
           DISTRIBUTION: ${{ secrets.DISTRIBUTION }}
         run: |
-          make dist CHANGED="$(git diff --name-only HEAD HEAD~1 | tr '\n' ' ')"
+          make publish CHANGED="$(git diff --name-only HEAD HEAD~1 | tr '\n' ' ')"

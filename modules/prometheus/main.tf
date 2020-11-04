@@ -78,6 +78,10 @@ resource "kubernetes_namespace" "this" {
 
   metadata {
     name = local.namespace
+
+    labels = {
+      role = "prometheus"
+    }
   }
 }
 

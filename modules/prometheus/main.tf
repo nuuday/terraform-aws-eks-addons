@@ -36,7 +36,6 @@ locals {
     }
     server = {
       retention        = var.retention
-      persistentVolume = var.persistence_size
 
       resources = {
         requests = {
@@ -51,6 +50,7 @@ locals {
 
       persistentVolume = {
         storageClass = "gp2"
+        size = var.persistence_size
       }
 
       statefulSet = {

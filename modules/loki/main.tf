@@ -71,7 +71,7 @@ locals {
           retention_period = "${var.retention_days * 24}h"
 
           index_tables_provisioning = {
-            enable_ondemand_throughput_mode = true
+            enable_ondemand_throughput_mode           = true
             enable_inactive_throughput_on_demand_mode = true
           }
         }

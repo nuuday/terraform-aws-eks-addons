@@ -71,19 +71,8 @@ locals {
           retention_period = "${var.retention_days * 24}h"
 
           index_tables_provisioning = {
-            provisioned_write_throughput = 1
-            provisioned_read_throughput  = 1
-
-            write_scale = {
-              enabled      = true
-              min_capacity = 1
-              role_arn     = module.iam.this_iam_role_arn
-            }
-            read_scale = {
-              enabled      = true
-              min_capacity = 1
-              role_arn     = module.iam.this_iam_role_arn
-            }
+            enable_ondemand_throughput_mode = true
+            enable_inactive_throughput_on_demand_mode = true
           }
         }
       }

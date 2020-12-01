@@ -72,6 +72,10 @@ locals {
         }
       }
 
+      admissionWebhooks = {
+        enabled = var.admission_webhooks
+      }
+
       extraArgs = {
         "publish-status-address" = var.loadbalancer_fqdn
       }

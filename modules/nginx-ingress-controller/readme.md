@@ -4,7 +4,7 @@ This terraform module deploy a Nginx Ingress Controller on an EKS cluster.
 - This module uses the kubernetes.
 - This module uses the helm provider.
 
-## Usage eaxmple
+## Usage example
 ```
 data "aws_eks_cluster" "this" {
   name = module.eks.cluster_id

@@ -70,3 +70,8 @@ variable "wait" {
   description = "Whether to wait for the deployment of this add-on to succeed before completing."
   default     = true
 }
+
+variable "admission_webhooks" {
+  description = "Ensure the validity of incoming ingress objects to avoid downtimes in case developers use invalid configuration for the ingress objects."
+  default     = false
+}

@@ -161,7 +161,10 @@ resource "random_id" "cert_manager" {
 }
 
 module "iam" {
-  source = "github.com/terraform-aws-modules/terraform-aws-iam//modules/iam-assumable-role-with-oidc?ref=v2.14.0"
+  # source = "github.com/terraform-aws-modules/terraform-aws-iam//modules/iam-assumable-role-with-oidc?ref=v2.14.0"
+
+  source  = "terraform-aws-modules/iam/aws//modules/iam-assumable-role-with-oidc"
+  version = "3.6.0"
 
   create_role                   = var.enable
   role_name                     = "${local.release_name}-irsa-${random_id.cert_manager.hex}"
@@ -233,7 +236,7 @@ resource "null_resource" "aws_iam_dns_http_cluster_issuer" {
   count = var.enable && var.install_clusterissuers && length(var.route53_zones) > 0 ? 1 : 0
 
   triggers = {
-    always_run = var.force_clusterissuers_recreate ? "${timestamp()}" : ""
+    always_run = var.force_clusterissuers_recreate ? timestamp() : ""
     email      = var.email
     zones      = jsonencode(var.route53_zones)
     class      = var.ingress_class
@@ -259,7 +262,7 @@ resource "null_resource" "aws_iam_dns_http_cluster_issuer_production" {
   count = var.enable && var.install_clusterissuers && length(var.route53_zones) > 0 ? 1 : 0
 
   triggers = {
-    always_run = var.force_clusterissuers_recreate ? "${timestamp()}" : ""
+    always_run = var.force_clusterissuers_recreate ? timestamp() : ""
   }
 
   provisioner "local-exec" {
@@ -284,7 +287,7 @@ resource "null_resource" "aws_iam_http_cluster_issuer" {
   count = var.enable && var.install_clusterissuers && length(var.route53_zones) == 0 ? 1 : 0
 
   triggers = {
-    always_run = var.force_clusterissuers_recreate ? "${timestamp()}" : ""
+    always_run = var.force_clusterissuers_recreate ? timestamp() : ""
     email      = var.email
     zones      = jsonencode(var.route53_zones)
     class      = var.ingress_class
@@ -310,7 +313,7 @@ resource "null_resource" "aws_iam_http_cluster_issuer_production" {
   count = var.enable && var.install_clusterissuers && length(var.route53_zones) == 0 ? 1 : 0
 
   triggers = {
-    always_run = var.force_clusterissuers_recreate ? "${timestamp()}" : ""
+    always_run = var.force_clusterissuers_recreate ? timestamp() : ""
   }
 
   provisioner "local-exec" {

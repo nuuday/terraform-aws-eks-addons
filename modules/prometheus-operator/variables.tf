@@ -88,4 +88,7 @@ variable "ingress_labels" {
   type        = object({})
 }
 
+variable "helm_values" {
+  default = {}
+}
 

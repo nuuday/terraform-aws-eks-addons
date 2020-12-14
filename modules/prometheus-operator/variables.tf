@@ -49,6 +49,13 @@ variable "prometheus_resources" {
   }
 }
 
+variable "thanos" {
+  default = {}
+}
+variable "thanos_enabled" {
+  default = false
+}
+
 variable "prometheus_config" {
   default = []
 }

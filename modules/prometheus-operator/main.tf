@@ -93,6 +93,21 @@ locals {
     }
   }
 
+  thanos = ! var.thanos_enabled ? {} : {
+    prometheus = {
+      prometheusSpec = {
+        thanos = {
+          baseImage = "quay.io/thanos/thanos",
+          version   = "v0.17.2",
+          objectStorageConfig = {
+            key  = "thanos.yaml",
+            name = kubernetes_secret.thanos.metadata[0].name
+          }
+        }
+      }
+    }
+  }
+
   slack_globals = {
     alertmanager = {
       config = {
@@ -146,8 +161,9 @@ EOF
   prometheus_values = concat([
     yamlencode(local.prometheus_default_values),
     yamlencode(var.slack_webhook != "" ? local.slack_globals : {}),
+    yamlencode(var.thanos),
     yamlencode(var.helm_values)
-  ],
+    ],
   var.prometheus_config)
 }
 
@@ -156,6 +172,18 @@ resource "kubernetes_namespace" "this" {
 
   metadata {
     name = local.namespace
+  }
+}
+
+resource "kubernetes_secret" "thanos" {
+  depends_on = [kubernetes_namespace.this]
+
+  metadata {
+    name      = "prometheus-thanos-store"
+    namespace = local.namespace
+  }
+  data = {
+    "thanos.yaml" : yamlencode(var.thanos)
   }
 }
 

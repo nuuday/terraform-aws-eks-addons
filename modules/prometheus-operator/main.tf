@@ -161,7 +161,7 @@ EOF
   prometheus_values = concat([
     yamlencode(local.prometheus_default_values),
     yamlencode(var.slack_webhook != "" ? local.slack_globals : {}),
-    yamlencode(var.thanos),
+    yamlencode(local.thanos),
     yamlencode(var.helm_values)
     ],
   var.prometheus_config)

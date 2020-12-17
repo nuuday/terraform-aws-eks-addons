@@ -2,7 +2,7 @@ locals {
   chart_name   = "metrics-server"
   release_name = "metrics-server"
   namespace    = var.namespace
-  repository   = "https://kubernetes-charts.storage.googleapis.com"
+  repository   = "https://charts.helm.sh/stable"
 }
 
 

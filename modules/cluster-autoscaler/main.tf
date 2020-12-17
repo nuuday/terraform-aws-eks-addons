@@ -5,7 +5,7 @@ locals {
   chart_version   = var.chart_version
   release_name    = "aws-cluster-autoscaler"
   namespace       = var.namespace
-  repository      = "https://kubernetes-charts.storage.googleapis.com"
+  repository      = "https://charts.helm.sh/stable"
   service_account = "aws-cluster-autoscaler"
   provider_url    = replace(var.oidc_provider_issuer_url, "https://", "")
 

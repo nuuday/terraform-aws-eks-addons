@@ -3,7 +3,7 @@ locals {
   chart_version = var.chart_version
   release_name  = "nginx-ingress"
   namespace     = var.namespace
-  repository    = "https://kubernetes-charts.storage.googleapis.com"
+  repository    = "https://charts.helm.sh/stable"
 
   http_ports = tomap({
     for listener in var.controller_service_node_ports :

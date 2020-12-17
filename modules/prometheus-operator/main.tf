@@ -101,7 +101,7 @@ locals {
           version   = "v0.17.2",
           objectStorageConfig = {
             key  = "thanos.yaml",
-            name = kubernetes_secret.thanos.metadata[0].name
+            name = kubernetes_secret.thanos[0].metadata[0].name
           }
         }
       }
@@ -176,6 +176,7 @@ resource "kubernetes_namespace" "this" {
 }
 
 resource "kubernetes_secret" "thanos" {
+  count      = var.enabled ? 1 : 0
   depends_on = [kubernetes_namespace.this]
 
   metadata {

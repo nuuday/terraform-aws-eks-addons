@@ -4,6 +4,14 @@ This repository contains Terraform modules for adding add-ons to EKS clusters.
 
 See [modules/](modules/) for the currently supported K8s modules.
 
+The following modules have been moved to their own repository and removed from this:
+
+ * calico => https://github.com/nuuday/terraform-aws-eks-addon-calico
+ * cluster-autoscaler => https://github.com/nuuday/terraform-aws-eks-addon-cluster-autoscaler
+ * metrics-server => https://github.com/nuuday/terraform-k8s-addon-metrics-server
+ * prometheus => https://github.com/nuuday/terraform-aws-eks-addon-prometheus
+ * nginx-ingress-controller => https://github.com/nuuday/terraform-k8s-addon-nginx-ingress-controller
+
 ## Usage
 
 All add-ons are **disabled** by default.

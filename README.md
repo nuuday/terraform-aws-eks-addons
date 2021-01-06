@@ -11,6 +11,7 @@ The following modules have been moved to their own repository and removed from t
  * metrics-server => https://github.com/nuuday/terraform-k8s-addon-metrics-server
  * prometheus => https://github.com/nuuday/terraform-aws-eks-addon-prometheus
  * nginx-ingress-controller => https://github.com/nuuday/terraform-k8s-addon-nginx-ingress-controller
+ * prometheus-operator => https://github.com/nuuday/terraform-aws-eks-prometheus-operator
 
 ## Usage
 

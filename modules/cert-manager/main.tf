@@ -41,6 +41,12 @@ locals {
       "kubernetes.io/os" = "linux"
     }
     installCRDs = true
+    prometheus = {
+      enabled = true // enabled by default in the upstream chart values
+      servicemonitor = {
+        enabled = var.metrics_servicemonitor_enabled
+      }
+    }
   }
 
   dns01_solver = {

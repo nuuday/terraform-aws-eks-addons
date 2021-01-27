@@ -12,6 +12,9 @@ locals {
 
   loki_values = {
     promtail = {
+      serviceMonitor = {
+        enabled = var.metrics_servicemonitor_enabled
+      }
       resources = {
         requests = {
           cpu    = "50m"
@@ -25,6 +28,9 @@ locals {
         annotations = {
           "eks.amazonaws.com/role-arn" = module.iam.this_iam_role_arn
         }
+      }
+      serviceMonitor = {
+        enabled = var.metrics_servicemonitor_enabled
       }
       resources = {
         requests = {
